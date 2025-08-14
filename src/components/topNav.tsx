@@ -2,10 +2,12 @@
 import { useEffect, useState } from 'react';
 import supabaseClient from '../supabase';
 import styles from './topNav.module.css'; // Assuming you have a CSS module for styling
+import {useRouter} from 'next/navigation';
 
 export default function TopNav() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
 
   const actLogIn = async () => {
     const supabase = supabaseClient();
@@ -41,14 +43,15 @@ export default function TopNav() {
   const actLogOut = async () => {
     const supabase = supabaseClient();
     await supabase.auth.signOut();
-    setIsLoggedIn(false);
+    // setIsLoggedIn(false);
+    router.push('/'); 
   }
 
   return (
     <div className={styles.topNav}>
       <h3>상단내비바</h3>
       {isLoggedIn ? (
-        <button onClick={actLogOut}>마이페이지</button>
+        <button onClick={actLogOut}>로그아웃(나중에 마이페이지로 바꿀거임)</button>
       ) : (
         <button onClick={actLogIn}>로그인</button>
       )}
