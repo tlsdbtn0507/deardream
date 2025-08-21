@@ -39,14 +39,22 @@ export default function FamilyCreateWizard({
   const router = useRouter();
   const [step, setStep] = useState<Step>("FAMILY");
   const [addressReady, setAddressReady] = useState(false);
-  const sp = useSearchParams();
-
+  
+  // const sp = useSearchParams();
+  let sp;
   // src/lib/paymentParams.ts
-  type ValidPaymentParams = {
-    paymentKey: string;
-    orderId: string;
-    amount: number;
-  };
+  type ValidPaymentParams = { ok: boolean; paymentKey: string; orderId: string; amount: number };
+
+  const [parsed, setParsed] = useState<ValidPaymentParams>({
+    ok: false, paymentKey: "", orderId: "", amount: 0,
+  });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    setParsed(parseAndValidatePaymentParams(params));
+  }, []);
+
 
   function parseAndValidatePaymentParams(sp: URLSearchParams) {
     const paymentKey = sp.get("paymentKey") ?? "";
@@ -70,6 +78,7 @@ export default function FamilyCreateWizard({
 
   // 다음(카카오) 우편번호 스크립트 로드
   useEffect(() => {
+    sp = new URLSearchParams(window.location.search);
     if ((window as any).daum?.Postcode) {
       setAddressReady(true);
       return;
@@ -110,7 +119,7 @@ export default function FamilyCreateWizard({
   const [userInputFam, setUserInputFam] = useState<string>("");
   // 컴포넌트 내부
   const fileRef = useRef<HTMLInputElement>(null);
-  const parsed = useMemo(() => parseAndValidatePaymentParams(sp as any), [sp]);
+  // const parsed = useMemo(() => parseAndValidatePaymentParams(sp as any), [sp]);
   // 파일 상단
   const confirmOnceRef = useRef(false);
   const advancedOnceRef = useRef(false);
