@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo, useState, useEffect, useCallback,useRef } from "react";
 import s from "./familyCreateWiz.module.css";
+
+import { Relation } from "@/utils/types";
+import { useMemo, useState, useEffect, useCallback,useRef } from "react";
 import { useRouter } from "next/navigation";
 import { publicImageUrl, isFamilyNameDuplicated, supabase } from "@/utils/supabase/client";
 import { koToQwerty } from "@/utils/util";
-import { useSearchParams } from "next/navigation";
 
 import CheckoutPage from "@/components/pay/checkOut"; // 결제 위젯 컴포넌트
 
@@ -15,6 +16,7 @@ type Step1Values = {
   familyName: string;
   closureRule: "SECOND_SUN" | "FOURTH_SUN";
   relation: string;
+  kinRole: string;
 };
 
 type Step2Values = {
@@ -27,7 +29,21 @@ type Step2Values = {
   avatarPreview?: string | null;
 };
 
-type Relation = "parent" | "grandparent" | "relative" | "other" | "";
+const KIN_ROLE_LABEL_KO: Record<Relation, string> = {
+  '': '눌러서 선택',
+  son: '아들',
+  daughter: '딸',
+  daughter_in_law: '며느리',
+  son_in_law: '사위',
+  grandson: '손자',
+  granddaughter: '손녀',
+  nephew_or_niece: '조카',
+  great_grandson: '증손자',
+  great_granddaughter: '증손녀',
+  spouse: '배우자',
+  sibling: '형제/자매',
+  other: '기타',
+};
 
 export default function FamilyCreateWizard({
   onComplete,
@@ -103,6 +119,7 @@ export default function FamilyCreateWizard({
     familyName: "",
     closureRule: "SECOND_SUN",
     relation: "",
+    kinRole: "",
   });
 
   const [step2, setStep2] = useState<Step2Values>({
@@ -342,6 +359,8 @@ export default function FamilyCreateWizard({
     }
     alert("가족 생성이 성공하였습니다!");
     // 생성 성공 후 이동
+    localStorage.removeItem("step1");
+    localStorage.removeItem("step2");
     router.replace(`/family/join?familyId=${json.invite_code}`);
     
   }
@@ -404,22 +423,25 @@ export default function FamilyCreateWizard({
             </div>
 
             <div className={s.inputGroup}>
-              <label className={s.label}>리더(가족생성자)와 받는분과의 관계</label>
+              <label className={s.label}>받는분과의 관계</label>
               <div className={s.row}>
                 <select
                   className={s.select}
                   value={step1.relation}
                   onChange={handleRelationChange}
                 >
-                  <option value="">눌러서 선택</option>
-                  <option value="parent">부모님</option>
-                  <option value="grandparent">조부모님</option>
-                  <option value="relative">친척</option>
-                  <option value="other">기타</option>
+                  {
+                    Object.entries(KIN_ROLE_LABEL_KO).map(([value, label]) => (
+                      <option key={value} value={value}>
+                        {label}
+                      </option>
+                    ))
+                  }
                 </select>
               </div>
-              <p className={s.helper}>리더의 입장에서 선택</p>
+              {/* <p className={s.helper}>리더의 입장에서 선택</p> */}
             </div>
+
 
             <div className={s.row} style={{ justifyContent: "space-between" }}>
               <span />

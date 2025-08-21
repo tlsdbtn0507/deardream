@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/utils/supabase/client";
 import { nextClosureDate } from "@/utils/clozure";
+import { Relation } from "@/utils/types";
 
 type Input = {
   paymentKey: string;
@@ -11,7 +12,7 @@ type Input = {
   step1Data: {
     familyName: string;
     closureRule: "SECOND_SUN" | "FOURTH_SUN";
-    relation: "parent" | "grandparent" | "relative" | "other";
+    relation: Relation
   };
   step2Data: {
     name: string;
@@ -69,6 +70,7 @@ export async function POST(req: Request) {
       user_id: userId,
       role: "owner", // enum(family_role)에 맞춰 owner/parent 등 사용
       nickname: null,
+      relation: step1Data.relation
     });
     if (fmErr) throw fmErr;
 
