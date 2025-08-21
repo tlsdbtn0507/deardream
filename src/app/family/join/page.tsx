@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import s from "./invite.module.css";
 import { publicImageUrl } from "@/utils/supabase/client";
 
@@ -9,7 +9,7 @@ import Image from "next/image";
 
 export default function FamilyInvitePage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
   const [code, setCode] = useState('');
   const [copied, setCopied] = useState(false);
 
@@ -28,7 +28,8 @@ export default function FamilyInvitePage() {
   const logo = publicImageUrl("deardreamLogo.png");
 
   useEffect(() => {
-    const familyInviteCode = searchParams.get("familyId") as string;
+    // const familyInviteCode = searchParams.get("familyId") as string;
+    const familyInviteCode = new URLSearchParams(window.location.search).get("familyId") as string;
     setCode(familyInviteCode)
   },[])
 
