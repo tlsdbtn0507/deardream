@@ -4,7 +4,8 @@ import { useMemo, useState, useEffect, useCallback,useRef } from "react";
 import s from "./familyCreateWiz.module.css";
 import { useRouter } from "next/navigation";
 import { publicImageUrl, isFamilyNameDuplicated, supabase } from "@/utils/supabase/client";
-import {koToQwerty} from "@/utils/util"
+import { koToQwerty } from "@/utils/util";
+import { useSearchParams } from "next/navigation";
 
 import CheckoutPage from "@/components/pay/checkOut"; // 결제 위젯 컴포넌트
 
@@ -38,7 +39,7 @@ export default function FamilyCreateWizard({
   const router = useRouter();
   const [step, setStep] = useState<Step>("FAMILY");
   const [addressReady, setAddressReady] = useState(false);
-  const sp = useMemo(() => new URLSearchParams(window.location.search), []);
+  const sp = useSearchParams();
 
   // src/lib/paymentParams.ts
   type ValidPaymentParams = {
