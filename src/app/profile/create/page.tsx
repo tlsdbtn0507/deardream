@@ -26,7 +26,14 @@ type FormState = {
   profile_image: string | null; // 저장된 이미지 URL
 };
 
-export default function UserProfileForm({ onSuccess }: Props) {
+export default function Page() {
+  return (
+    <UserProfileForm />
+  );
+}
+  
+  
+function  UserProfileForm({ onSuccess }: Props) {
   const [form, setForm] = useState<FormState>({
     full_name: "",
     phone: "",
