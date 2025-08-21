@@ -3,7 +3,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import s from "./invite.module.css";
-import { publicImageUrl } from "@/utils/supabase/client";
+import { pageImageUrl, publicImageUrl } from "@/utils/supabase/client";
 
 export default function FamilyInvitePage() {
   const router = useRouter();
@@ -11,7 +11,7 @@ export default function FamilyInvitePage() {
   const [code, setCode] = useState('');
   const [copied, setCopied] = useState(false);
 
-  const hero = useMemo(() => publicImageUrl("famCodeImg.png"), []);
+  const hero = useMemo(() => pageImageUrl("family.png"), []);
 
   const copy = async () => {
     if (!code) return;

@@ -43,6 +43,11 @@ export function publicImageUrl(path: string) {
   return data.publicUrl;
 }
 
+export function pageImageUrl(imgName: string) {
+  const { data } = supabase.storage.from("avatars/page").getPublicUrl(imgName);
+  return data.publicUrl;
+}
+
 export async function isFamilyNameDuplicated(name: string) {
   const { count, error } = await supabase
     .from("families")

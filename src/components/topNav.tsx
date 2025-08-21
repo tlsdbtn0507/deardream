@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/utils/supabase/client';
 import styles from './topNav.module.css'; // Assuming you have a CSS module for styling
 import { useRouter } from 'next/navigation';
-import { publicImageUrl } from '@/utils/supabase/client';
+import { publicImageUrl, pageImageUrl } from '@/utils/supabase/client';
 
 export default function TopNav() {
 
@@ -32,13 +32,8 @@ export default function TopNav() {
     checkisLoggedIn();
   }, []);
 
-  const actLogOut = async () => {
-    await supabase.auth.signOut();
-    router.push('/'); 
-  }
-
   const logoImgUrl = publicImageUrl('deardreamLogo.png');
-  const mypageLogoImgUrl = publicImageUrl('icon.png');
+  const mypageLogoImgUrl = pageImageUrl('profile.png');
 
   const gotoMypage = () => {
     alert("미구현 페이지 입니다.");
