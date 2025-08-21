@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import supabaseClient from "@/supabase";
+import { supabase } from "@/utils/supabase/client"; // supabase 클라이언트 가져오기
 import styles from "./googleBtn.module.css"; 
 
 export default function GoogleSignInButton() {
@@ -11,13 +11,11 @@ export default function GoogleSignInButton() {
   const handleSignIn = async () => {
     setLoading(true);
     try {
-      const supabase = supabaseClient();
       // 필요한 경우 redirectTo를 /auth/callback → 해당 라우트에서 세션 교환 후 홈으로 리다이렉트
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
           redirectTo: `${location.origin}/auth/callback`,
-          // queryParams: { prompt: "select_account" } // 계정 선택 강제하고 싶으면 사용
         },
       });
       if (error) {

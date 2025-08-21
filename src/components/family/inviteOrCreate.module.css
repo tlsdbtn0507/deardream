@@ -1,0 +1,86 @@
+.wrap {
+  display: grid;
+  gap: 2rem;
+  margin-inline: auto;
+  padding: 2rem 1.25rem;
+  max-width: 28rem; /* ~448px */
+}
+
+.card {
+  background: #ffffff;
+  border: 0.125rem solid #018941;         /* 메인 그린 */
+  border-radius: 1.25rem;                  /* 20px */
+  padding: 2rem 1.5rem;
+  box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.03);
+}
+
+.title {
+  color: #374151;                          /* 텍스트 기본 */
+  text-align: center;
+  line-height: 1.35;
+  font-weight: 700;
+  font-size: clamp(1.125rem, 2.5vw, 1.375rem);
+  margin: 0 0 1.5rem;
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+}
+
+.input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 0.125rem solid #e5e7eb;   /* 하단 라인 */
+  padding: 0.75rem 0.25rem;
+  font-size: 1rem;
+  color: #374151;
+  outline: none;
+}
+
+.input::placeholder {
+  color: #9ca3af;                          /* 비활성 텍스트 */
+}
+
+.input:focus {
+  border-color: #018941;
+  box-shadow: 0 0 0 0.25rem rgba(1, 137, 65, 0.25); /* 포커스 링 */
+}
+
+.primaryBtn {
+  width: 100%;
+  border: none;
+  border-radius: 0.75rem;
+  background: #018941;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: transform 120ms ease, opacity 120ms ease, background 120ms ease;
+}
+
+.primaryBtn:hover {
+  transform: translateY(-0.05rem);
+  background: #027a3a;
+}
+
+.primaryBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* 접근성: 시각적으로만 숨김 */
+.visuallyHidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

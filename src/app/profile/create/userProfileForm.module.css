@@ -1,0 +1,138 @@
+.form {
+  width: min(100%, 38rem);
+  margin-inline: auto;
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+  border-radius: 1rem;
+  background: linear-gradient(180deg, #ffffff 0%, #f7faf9 100%);
+  box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.06);
+}
+
+.title {
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  font-weight: 700;
+  color: #374151;
+  margin: 0 0 0.5rem 0;
+}
+
+.label {
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+  color: #374151;
+}
+
+.input {
+  width: 100%;
+  padding: 0.8rem 0.9rem;
+  border: 0.08rem solid #e5e7eb;
+  border-radius: 0.8rem;
+  background: #fff;
+  outline: none;
+  color: #374151;
+}
+
+.input:focus {
+  border-color: #018941;
+  box-shadow: 0 0 0 0.15rem rgba(1, 137, 65, 0.12);
+}
+
+.addressRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 0.6rem;
+}
+
+.findButton {
+  align-self: end;
+  padding: 0.85rem 1.1rem;
+  border: none;
+  border-radius: 0.8rem;
+  background: #018941;
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.findButton[disabled],
+.findButton[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* 아바타 */
+.avatarRow {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: #f2f2f2;
+}
+
+.avatar {
+  width: 5.5rem;
+  height: 5.5rem;
+  border-radius: 50%;
+  background: #e0ffeb;
+  border: 0.12rem solid #018941;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatarPlaceholder {
+  color: #9ca3af;
+  font-weight: 600;
+}
+
+.avatarBtns {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.secondaryBtn {
+  display: inline-grid;
+  place-items: center;
+  padding: 0.75rem 1rem;
+  border-radius: 0.8rem;
+  background: #e0ffeb;
+  color: #018941;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tertiaryBtn {
+  padding: 0.75rem 1rem;
+  border-radius: 0.8rem;
+  background: #fff5ac;
+  color: #374151;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+.submit {
+  margin-top: 0.5rem;
+  padding: 0.95rem 1.2rem;
+  border: none;
+  border-radius: 0.9rem;
+  background: #018941;
+  color: #ffffff;
+  font-weight: 800;
+  cursor: pointer;
+}

@@ -1,43 +1,64 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import supabaseClient from "@/supabase";
+import { supabase, fetchUserFamily, fetchUserInfo } from "@/utils/supabase/client";
+import { useRouter } from 'next/navigation';
+import { FamilyMember } from "@/utils/types";
+
+import InviteOrCreate from "@/components/family/inviteOrCreate"
+
+import Link from "next/link";
+
 
 
 export default function Main() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState("");
+  const [userUid, setUserUid] = useState("");
+  const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([]); // 가족 구성원 정보 저장용
+  const router = useRouter();
 
-  const isUserLoggedIn = async () => {
-    
-    const {data} = await supabaseClient().auth.getSession();
-    const user = data.session?.user.user_metadata;
-    setUserName(user!.name);
-    console.log(data);
-    //로그인 한 값을 전역에 저장
-    
-    if (data.session) {
-      return true;
-    }
-    return false;
-  }
 
   useEffect(() => {
-    const checkisLoggedIn = async () => {
-      const loggedIn = await isUserLoggedIn();
-      setIsLoggedIn(loggedIn);
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        alert("로그인이 필요합니다.");
+        router.push("/");
+        return;
+      }
+      console.log(session)
+      setUserName(session.user.user_metadata?.name ?? "");
+      setUserUid(session.user.id);      // 여기까지만
+    })();
+  }, [router]);
+
+  useEffect(() => {
+    const isUserHasFamily = async () => {
+      if (!userUid) return;               // uid가 생긴 뒤에만 실행
+      const isFamilySet = await fetchUserFamily(userUid) as FamilyMember[];
+      setFamilyMembers(isFamilySet);
     }
-    checkisLoggedIn();
-  }, []);
+    isUserHasFamily();
+  }, [userUid]);
+
+
 
   return (
     <div>
       <h1>Main Page</h1>
-      {isLoggedIn ? (
-        // <p>Welcome back!</p>
-        <p>반갑습니다! {userName}님</p>
+      <p>반갑습니다! {userName}님</p>
+      { familyMembers.length > 0 ? (
+        <div>
+          <h2>가족 구성원</h2>
+        </div>
       ) : (
-        <p>Please log in to access more features.</p>
+          <InviteOrCreate userId={userUid} />
+        // <div>
+        //   <h2>가족 구성원이 없습니다.</h2>
+        //     <p>가족을 추가해보세요!</p>
+        //     <button id="add" onClick={checkIsUserSinged}>가족 생성하기</button>
+        //     <button id="join" onClick={checkIsUserSinged}>가족 참여하기</button>
+        // </div>
       )}
     </div>
   )

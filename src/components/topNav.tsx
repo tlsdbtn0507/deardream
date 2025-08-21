@@ -1,27 +1,19 @@
 'use client';
 import { useEffect, useState } from 'react';
-import supabaseClient from '../supabase';
+import { supabase } from '@/utils/supabase/client';
 import styles from './topNav.module.css'; // Assuming you have a CSS module for styling
-import {useRouter} from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { publicImageUrl } from '@/utils/supabase/client';
 
 export default function TopNav() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
 
-  const actLogIn = async () => {
-    const supabase = supabaseClient();
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${location.origin}/auth/callback`,
-      }
-    });
-  };
 
   const isUserLoggedIn = async () => {
     
-    const {data} = await supabaseClient().auth.getSession();
+    const { data } = await supabase.auth.getSession();
     console.log(data);
 
     //로그인 한 값을 전역에 저장
@@ -41,20 +33,25 @@ export default function TopNav() {
   }, []);
 
   const actLogOut = async () => {
-    const supabase = supabaseClient();
     await supabase.auth.signOut();
-    // setIsLoggedIn(false);
     router.push('/'); 
   }
 
+  const logoImgUrl = publicImageUrl('deardreamLogo.png');
+  const mypageLogoImgUrl = publicImageUrl('icon.png');
+
+  const gotoMypage = () => {
+    alert("미구현 페이지 입니다.");
+    // if (isLoggedIn) {
+    //   router.push('/profile');
+    // } else {
+    //   actLogIn();
+    // }
+  }
   return (
     <div className={styles.topNav}>
-      <h3>상단내비바</h3>
-      {isLoggedIn ? (
-        <button onClick={actLogOut}>로그아웃(나중에 마이페이지로 바꿀거임)</button>
-      ) : (
-        <button onClick={actLogIn}>로그인</button>
-      )}
+      <img src={logoImgUrl} />
+      <img onClick={gotoMypage} src={mypageLogoImgUrl}/>
     </div>
   )
 }
