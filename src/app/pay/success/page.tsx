@@ -1,9 +1,17 @@
 'use client'
-
-import { useState,useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function SuccessPage() {
+  return (
+    <Suspense fallback={null}>
+      <SuccessBody />
+    </Suspense>
+  );
+
+}
+
+function SuccessBody() {
   const [isConfirmed, setIsConfirmed] = useState(false);
 
   const searchParams = new URLSearchParams(window.location.search);
