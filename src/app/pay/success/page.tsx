@@ -14,7 +14,7 @@ export default function SuccessPage() {
 function SuccessBody() {
   const [isConfirmed, setIsConfirmed] = useState(false);
 
-  const searchParams = new URLSearchParams(window.location.search);
+  const searchParams = useSearchParams();
   // const [searchParams] = useSearchParams();
   const paymentKey = searchParams.get("paymentKey");
   const orderId = searchParams.get("orderId");
