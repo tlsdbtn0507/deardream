@@ -5,8 +5,6 @@ import { useRouter } from "next/navigation";
 import s from "./invite.module.css";
 import { publicImageUrl } from "@/utils/supabase/client";
 
-import Image from "next/image";
-
 export default function FamilyInvitePage() {
   const router = useRouter();
   // const searchParams = useSearchParams();
@@ -36,7 +34,7 @@ export default function FamilyInvitePage() {
   return (
     <div className={s.page}>
       <div className={s.logoBar}>
-        <Image src={logo} alt="디어드림 로고" className={s.logo} />
+        <img src={logo} alt="디어드림 로고" className={s.logo} />
       </div>
       <div className={s.topBar} />
       <div className={s.inner}>
@@ -44,7 +42,7 @@ export default function FamilyInvitePage() {
 
         <div className={s.heroWrap}>
           {/* 외부 URL이라 img 사용 */}
-          <Image src={hero} alt="가족 이미지" className={s.heroImg} />
+          <img src={hero} alt="가족 이미지" className={s.heroImg} />
         </div>
 
         <section className={s.section}>
