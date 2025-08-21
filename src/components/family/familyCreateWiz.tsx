@@ -26,7 +26,7 @@ type Step2Values = {
   avatarPreview?: string | null;
 };
 
-export type Relation = "parent" | "grandparent" | "relative" | "other" | "";
+type Relation = "parent" | "grandparent" | "relative" | "other" | "";
 
 export default function FamilyCreateWizard({
   onComplete,
@@ -528,18 +528,6 @@ export default function FamilyCreateWizard({
               {/* 결제 위젯이 여기에 렌더링됩니다. */}
               {!parsed.ok && <CheckoutPage/>}
             </div>
-
-            {/* <div className={s.row} style={{ justifyContent: "space-between" }}>
-              <button className={s.btnWide} onClick={back}>
-                이전
-              </button>
-              <button
-                disabled={!parsed.ok && !canNext2}
-                className={s.btnWide}
-                onClick={confirmPayment}>
-                완료하기
-              </button>
-            </div> */}
           </>
         )}
       </div>
