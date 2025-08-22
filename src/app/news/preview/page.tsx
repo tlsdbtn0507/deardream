@@ -9,7 +9,7 @@ import { pageImageUrl, supabase, writePost } from '@/utils/supabase/client';
 import { useFeed } from '@/components/context/feedContext';
 import { useRouter } from "next/navigation";
 import { Relation } from "@/utils/types";
-import { srcToBlob } from '@/utils/util';
+
 
 type UserInfoForWrite = {
   nickName: string;
@@ -72,31 +72,10 @@ export default function PreviewPage() {
     router.back();
   };
 
-  async function saveImgsToStorage(imgs: string[]) {
-    const bucket = "avatars"; // ← 실제 버킷명 확인!
-    const prefix = "posts";
-
-    const urls: string[] = [];
-    for (const src of imgs) {
-      const blob = await srcToBlob(src);
-      const extFromMime = (blob.type.split("/")[1] || "bin").split("+")[0];
-      const path = `${prefix}/${Date.now()}_${crypto.randomUUID()}.${extFromMime}`;
-
-      const { error } = await supabase
-        .storage.from(bucket)
-        .upload(path, blob, { upsert: true, contentType: blob.type });
-
-      if (error) throw error;
-
-      const { data } = supabase.storage.from(bucket).getPublicUrl(path);
-      urls.push(data.publicUrl);
-    }
-    return urls;
-  }
 
   const handleUpload = async () => {
     // 실제 업로드 로직 (Context에 추가)
-    const imageUrls = await saveImgsToStorage(postData!.images);
+    // const imageUrls = await saveImgsToStorage(postData!.images);
     const essentialInfo = JSON.parse(localStorage.getItem('essentialInfo') || '{}');
     if (postData) {
       try {
@@ -104,7 +83,7 @@ export default function PreviewPage() {
           author_id: essentialInfo.author_id,
           family_id: essentialInfo.family_id,
           body: postData.text,
-          images: imageUrls,
+          images: postData.images,
         });
         // 세션스토리지에서 데이터 삭제
         sessionStorage.removeItem('previewData');

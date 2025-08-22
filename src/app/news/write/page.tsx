@@ -7,10 +7,12 @@ import { useFeed } from '@/components/context/feedContext';
 import {
   pageImageUrl,
   fetchUserInfo,
-  fetchUserFamily
+  fetchUserFamily,
+  supabase
 } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import { Relation, relationLabel } from "@/utils/types";
+import { srcToBlob } from '@/utils/util';
 
 type NavKey = 'message' | 'home' | 'write';
 
@@ -173,18 +175,38 @@ export default function WriteNewsPage() {
     setCurrentImageIndex(prev => prev < images.length - 1 ? prev + 1 : 0);
   };
 
+  async function saveImgsToStorage(imgs: string[]) {
+    const bucket = "avatars"; // ← 실제 버킷명 확인!
+    const prefix = "posts";
+
+    const urls: string[] = [];
+    for (const src of imgs) {
+      const blob = await srcToBlob(src);
+      const extFromMime = (blob.type.split("/")[1] || "bin").split("+")[0];
+      const path = `${prefix}/${Date.now()}_${crypto.randomUUID()}.${extFromMime}`;
+
+      const { error } = await supabase
+        .storage.from(bucket)
+        .upload(path, blob, { upsert: true, contentType: blob.type });
+
+      if (error) throw error;
+
+      const { data } = supabase.storage.from(bucket).getPublicUrl(path);
+      urls.push(data.publicUrl);
+    }
+    return urls;
+  }
 
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
     // 작성 완료 로직
-    const dateString = makeDateString();
+    const imageUrls = await saveImgsToStorage(images);
     // 미리보기 데이터를 세션스토리지에 저장
     const previewData = {
       text: text.trim(),
-      images: images,
+      images: imageUrls,
       authorName: userInfoForWriting.nickName,
       authorRole: userInfoForWriting.relation,
-      date: dateString
     };
 
     sessionStorage.setItem('previewData', JSON.stringify(previewData));
