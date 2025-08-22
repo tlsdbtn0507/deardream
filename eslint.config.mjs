@@ -8,8 +8,7 @@ import tseslint from "@typescript-eslint/eslint-plugin";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const compat = new FlatCompat({ baseDirectory: __dirname });
-
-export default [
+const Module = [
   // Next.js 권장 설정
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 
@@ -27,6 +26,9 @@ export default [
     },
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
+      '@next/next/no-img-element': 'off',  // <<< 이 줄 추가
+      "@typescript-eslint/explicit-module-boundary-types": "off",
     },
   },
 ];
+export default Module
