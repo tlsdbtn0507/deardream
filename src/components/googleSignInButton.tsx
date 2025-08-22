@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { supabase } from "@/utils/supabase/client"; // supabase 클라이언트 가져오기
-import styles from "./googleBtn.module.css"; 
+import styles from "./css/googleBtn.module.css"; 
 
 export default function GoogleSignInButton() {
   const [loading, setLoading] = useState(false);

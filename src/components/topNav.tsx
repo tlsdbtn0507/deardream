@@ -1,7 +1,8 @@
 'use client';
+import styles from './css/topNav.module.css'; // Assuming you have a CSS module for styling
+
 import { useEffect, useState } from 'react';
 import { supabase } from '@/utils/supabase/client';
-import styles from './topNav.module.css'; // Assuming you have a CSS module for styling
 import { useRouter } from 'next/navigation';
 import { publicImageUrl, pageImageUrl } from '@/utils/supabase/client';
 
@@ -45,8 +46,8 @@ export default function TopNav() {
   }
   return (
     <div className={styles.topNav}>
-      <img src={logoImgUrl} />
-      <img onClick={gotoMypage} src={mypageLogoImgUrl}/>
+      <img src={logoImgUrl} alt=""/>
+      <img onClick={gotoMypage} src={mypageLogoImgUrl} alt=""/>
     </div>
   )
 }
