@@ -1,0 +1,40 @@
+/* Green Banner Component */
+.greenBanner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #018941;
+  padding: 0.75rem 1rem;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  position: relative;
+  font-family: 'SeoulHangangB', sans-serif;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.bannerIcon {
+  filter: brightness(0) invert(1);
+  flex-shrink: 0;
+}
+
+.bannerIconSmall {
+  width: 1rem;
+  height: 1rem;
+}
+
+.bannerIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.bannerIconLarge {
+  width: 3rem;
+  height: 1.5rem;
+}
+
+.bannerText {
+  font-family: 'SeoulHangangB', sans-serif;
+  white-space: nowrap;
+}

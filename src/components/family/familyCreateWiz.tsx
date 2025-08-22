@@ -46,7 +46,6 @@ const KIN_ROLE_LABEL_KO: Record<Relation, string> = {
 };
 
 export default function FamilyCreateWizard({
-  onComplete,
   autoAdvanceToPayment = false,   // ✅ 2단계 유효 시 자동 결제 단계로
 }: {
   onComplete?: (data: { step1: Step1Values; step2: Step2Values }) => void;

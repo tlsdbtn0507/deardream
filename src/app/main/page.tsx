@@ -6,9 +6,9 @@ import { useRouter } from 'next/navigation';
 import { FamilyMember } from "@/utils/types";
 
 import InviteOrCreate from "@/components/family/inviteOrCreate"
+import BottomNavigation from "@/components/bottomNavigation";
 
 import Link from "next/link";
-
 
 
 export default function Main() {
@@ -47,19 +47,14 @@ export default function Main() {
     <div>
       <h1>Main Page</h1>
       <p>반갑습니다! {userName}님</p>
-      { familyMembers.length > 0 ? (
+      { familyMembers ? (
         <div>
           <h2>가족 구성원</h2>
         </div>
       ) : (
           <InviteOrCreate userId={userUid} />
-        // <div>
-        //   <h2>가족 구성원이 없습니다.</h2>
-        //     <p>가족을 추가해보세요!</p>
-        //     <button id="add" onClick={checkIsUserSinged}>가족 생성하기</button>
-        //     <button id="join" onClick={checkIsUserSinged}>가족 참여하기</button>
-        // </div>
       )}
+      <BottomNavigation selectedNav="home" onNavChange={() => { }} onHomeClick={() => { }} />
     </div>
   )
 }

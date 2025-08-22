@@ -1,0 +1,68 @@
+/* Bottom Navigation */
+.bottomNav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 23.4375rem;
+  height: 6.25rem;
+  background: white;
+  border-top: 0.0625rem solid #e9ecef;
+  display: flex;
+  justify-content: space-around;
+  padding: 0.5rem 0;
+  box-shadow: 0 -0.125rem 0.625rem rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  border-radius: 1.25rem;
+}
+
+.navItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.navItem.active {
+  color: #018941;
+}
+
+.navItem.active .navIcon {
+  color: #018941;
+}
+
+.navIcon {
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+  transition: all 0.2s ease;
+  display: block;
+  margin: 0 auto;
+}
+
+.navLabel {
+  font-size: 0.75rem;
+  color: #6c757d;
+  font-weight: 500;
+  transition: color 0.2s ease;
+  text-align: center;
+  width: 100%;
+}
+
+.navItem.active .navLabel {
+  color: #018941;
+}
+
+/* Hover Effects */
+@media (hover: hover) {
+  .navItem:hover {
+    background: #f8f9fa;
+  }
+}

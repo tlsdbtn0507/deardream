@@ -15,7 +15,8 @@ export const fetchUserFamily = async (userId: string) => {
   const { data, error } = await supabase
     .from("family_members")
     .select("*")
-    .eq("user_id", userId);
+    .eq("user_id", userId)
+    .maybeSingle();
 
   if (error) {
     console.error("Error fetching family members:", error);
@@ -40,12 +41,14 @@ export const fetchUserInfo = async (userId: string) => {
 
 export function publicImageUrl(path: string) {
   const { data } = supabase.storage.from("avatars").getPublicUrl(path);
-  return data.publicUrl;
+  const url = data?.publicUrl?.trim();
+  return url && url.length > 0 ? url : undefined; // 빈 문자열이면 undefined
 }
 
 export function pageImageUrl(imgName: string) {
   const { data } = supabase.storage.from("avatars/page").getPublicUrl(imgName);
-  return data.publicUrl;
+  const url = data?.publicUrl?.trim();
+  return url && url.length > 0 ? url : undefined; // 빈 문자열이면 undefined
 }
 
 export async function isFamilyNameDuplicated(name: string) {
@@ -68,4 +71,21 @@ export async function getUserSession() {
     return false;
   }
   return session.user.id;
+}
+
+export async function writePost(params: {
+  family_id: string;
+  author_id: string;
+  body: string;
+  images: string[];
+}) {
+  const { error } = await supabase
+    .from("posts")
+    .insert(params);
+
+  if (error) {
+    console.error("Error writing post:", error);
+    throw new Error("Failed to write post");
+  }
+  return true;
 }

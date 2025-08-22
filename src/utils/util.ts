@@ -151,6 +151,25 @@ export function koToQwerty(src: string): string {
   return out;
 }
 
+function dataUrlToBlob(dataUrl: string): Blob {
+  const [head, body] = dataUrl.split(",");
+  const mime =
+    head.match(/data:(.*);base64/)?.[1] || "application/octet-stream";
+  const bin = atob(body);
+  const u8 = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+  return new Blob([u8], { type: mime });
+}
+
+/** '/xxx.png' | 'https://...' | 'blob:...' | 'data:...' 모두 지원 */
+export async function srcToBlob(src: string): Promise<Blob> {
+  if (src.startsWith("data:")) return dataUrlToBlob(src);
+  // 'blob:'도 fetch로 됩니다(같은 문서 세션에서 유효할 때)
+  const res = await fetch(src);
+  if (!res.ok) throw new Error(`fetch failed for ${src}`);
+  return await res.blob();
+}
+
 // 예시
 // koToQwerty("유수") === "dbtn"
 // koToQwerty("값")   === "rkqt"  (ㄱ r, ㅏ k, ㅄ qt)
