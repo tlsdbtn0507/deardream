@@ -65,56 +65,43 @@ export default function WriteNewsPage() {
   };
 
   const getUserInfoFromLocal = () => {
-    // 로컬 스토리지에서 사용자 정보 가져오기
-    const { user } = JSON.parse(localStorage.getItem("sb-raksukmfixcxokoqewyn-auth-token") as string);
-    const { id: userId } = user;
-    return userId;
-  }
+    const raw = localStorage.getItem('sb-raksukmfixcxokoqewyn-auth-token');
+    if (!raw) return null;
+    try {
+      const parsed = JSON.parse(raw);
+      return parsed?.user?.id ?? null;
+    } catch {
+      return null;
+    }
+  };
   
   useEffect(() => {
     const userId = getUserInfoFromLocal();
+    if (!userId) { router.push('/login'); return; }
 
-    const fetchFamAndUserInfo = async (userId:string) => {
-      const userInfo = await fetchUserInfo(userId);
-      const familyInfo = await fetchUserFamily(userId) as FamilyMember[];
-      if (!userInfo) {
-        alert("로그인 후 사용해주세요.");
-        router.push("/login");
-        return
-      }
-      if (!familyInfo) {
-        alert("가족 정보를 가져올 수 없습니다.");
-        router.push("/main");
-        return
-      }
+    const fetchFamAndUserInfo = async (uid: string) => {
+      const userInfo = await fetchUserInfo(uid);
+      const familyInfo = (await fetchUserFamily(uid)) as FamilyMember[] | null;
+
+      if (!userInfo) { alert('로그인 후 사용해주세요.'); router.push('/login'); return; }
+      if (!familyInfo || familyInfo.length === 0) { alert('가족 정보를 가져올 수 없습니다.'); router.push('/main'); return; }
 
       const userObj: UserInfoForWrite = {
         nickName: familyInfo[0].nickname ?? userInfo.full_name,
         profile_image: userInfo.profile_image,
-        relation: relationLabel(familyInfo[0].relation) as Relation
+        relation: relationLabel(familyInfo[0].relation) as Relation,
       };
 
-      localStorage.setItem("userWritingInfo", JSON.stringify(userObj));
+      // 필요하면 저장(미리보기에서 읽음)
+      localStorage.setItem('userWritingInfo', JSON.stringify(userObj));
+      localStorage.setItem('essentialInfo', JSON.stringify({ author_id: userInfo.user_id, family_id: familyInfo[0].family_id }));
 
-      console.log("User information for writing:", userObj,familyInfo);
-
+      // 화면은 state만 사용
       setUserInfoForWriting(userObj);
-      localStorage.setItem("essentialInfo",
-        JSON.stringify({ author_id: userInfo.user_id, family_id: familyInfo[0].family_id }));
     };
 
-    const isEssentialHas = localStorage.getItem("essentialInfo");
-
-    if (!isEssentialHas) {
-      fetchFamAndUserInfo(userId);
-      return
-    }
-    const userObj = localStorage.getItem("userWritingInfo") as string;
-    setUserInfoForWriting(JSON.parse(userObj));
-    // if (userObj) {
-    // }
-
-  }, [router]);;
+    fetchFamAndUserInfo(userId);
+  }, [router]);
 
   useEffect(() => {
     //세션스토리지에 사진이 있으면 초기화 하지 말고 렌더링
@@ -256,7 +243,9 @@ export default function WriteNewsPage() {
 
       {/* User Info */}
       <div className={styles.userInfo}>
-        {userInfoForWriting && <img onError={(e) => { e.currentTarget.style.visibility = 'hidden'; }} className={styles.profileImage} src={userInfoForWriting.profile_image} alt="" />}
+        {/* {userInfoForWriting && <img onError={(e) => { e.currentTarget.style.visibility = 'hidden'; }} className={styles.profileImage} src={userInfoForWriting.profile_image} alt="" />} */}
+        {/* <img className={styles.profileImage} src={userInfoForWriting.profile_image} alt="" /> */}
+        {userInfoForWriting && <img className={styles.profileImage} src={userInfoForWriting.profile_image} alt="" />}
         <div className={styles.userDetails}>
           <span className={styles.username}>{userInfoForWriting.nickName}</span>
           <span className={styles.userTag}>{userInfoForWriting.relation}</span>

@@ -1,3 +1,4 @@
+/* ===== Page Shell ===== */
 .container {
   max-width: 23.4375rem;
   margin: 0 auto;
@@ -10,21 +11,14 @@
   overflow-y: scroll;
   padding-bottom: 5rem;
   box-shadow: 0 0 1.25rem rgba(0, 0, 0, 0.1);
-  
+
   /* 스크롤바 숨김 */
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
+.container::-webkit-scrollbar { display: none; }
 
-.container::-webkit-scrollbar {
-  display: none;
-}
-
-
-
-
-
-/* Main Content */
+/* ===== Main ===== */
 .content {
   flex: 1;
   padding: 1rem;
@@ -32,12 +26,11 @@
 }
 
 .newsCard {
-  background-color: white;
+  background-color: #fff;
   border-radius: 0.75rem;
   padding: 1rem;
   margin-bottom: 1rem;
   box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
-  /* background-image: url('/hanji.png'); */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -47,64 +40,54 @@
   gap: 1rem;
 }
 
-/* Profile Section */
+/* ===== Profile Section ===== */
 .profileSection {
   display: flex;
   align-items: flex-start;
   margin-bottom: 1rem;
   gap: 0.75rem;
 }
-
 .profileSectionWithText {
   display: flex;
   align-items: flex-start;
   margin-bottom: -0.5rem;
   gap: 0.75rem;
 }
-
 .profileImage {
   width: 3.125rem;
   height: 3.125rem;
   border-radius: 50%;
-  /* background-color: #ddd; */
-  /* flex-shrink: 0; */
 }
-
 .profileInfo {
   display: flex;
   flex-direction: column;
   gap: 0.125rem;
   flex-shrink: 0;
 }
-
 .date {
   font-size: 0.75rem;
   color: #666;
   font-weight: 500;
 }
-
 .authorInfo {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
-
 .authorRole {
-  /* background-color: #E8F5E8; */
   color: #018941;
   padding: 0.125rem 0.5rem;
   border-radius: 0.75rem;
   font-size: 0.625rem;
   font-weight: 600;
 }
-
 .authorName {
   font-size: 1rem;
   font-weight: 600;
   color: #333;
 }
 
-/* Text Content */
+/* ===== Text Content ===== */
 .textContent {
   font-size: 0.8rem;
   line-height: 1.6;
@@ -122,19 +105,19 @@
   background-color: #F2FBF1;
 }
 
-/* Image Grid */
+/* ===== Image Grid (핵심 수정 포함) ===== */
 .imageGrid {
+  --gap: 0.5rem;
   display: grid;
-  gap: 0.5rem;
-  min-height: 30rem;
+  gap: var(--gap);
+  min-height: 24rem; /* 필요에 따라 조절 가능 */
 }
 
-/* 1개 이미지일 때: 1,2번 그리드 합치고 3,4번은 그대로 */
+/* 1장: 위 가로 전체, 아래 구분선 + 2칸 */
 .imageGrid.single {
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 0.125rem 1fr;
 }
-
 .imageGrid.single::before {
   content: '';
   grid-column: 1 / -1;
@@ -143,12 +126,11 @@
   height: 0.125rem;
 }
 
-/* 2개 이상 이미지일 때: 기존 2x2 그리드 */
+/* 2장 이상 기본(2x2) */
 .imageGrid.multiple {
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 0.125rem 1fr;
 }
-
 .imageGrid.multiple::before {
   content: '';
   grid-column: 1 / -1;
@@ -157,12 +139,11 @@
   height: 0.125rem;
 }
 
-/* 3개 이미지일 때: 위에 1개, 아래에 2개 */
+/* 3장: 위 한 장, 아래 두 장 (핵심) */
 .imageGrid.triple {
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 0.125rem 1fr;
 }
-
 .imageGrid.triple::before {
   content: '';
   grid-column: 1 / -1;
@@ -170,59 +151,55 @@
   background-color: #018941;
   height: 0.125rem;
 }
-
-/* 3개 이미지일 때 첫 번째 이미지를 1,2번 그리드에 걸쳐서 배치 */
+/* 첫 번째 이미지는 두 칸을 가로지름 + 높이 균형을 위한 2:1 비율 */
 .imageGrid.triple .imageContainer:first-child {
-  grid-column: 1 / 3;
+  grid-column: 1 / -1;
   grid-row: 1;
+  aspect-ratio: 2 / 1; /* ★ 핵심: 세로가 절반이 되도록 */
 }
 
+/* 공통 이미지 컨테이너 */
 .imageContainer {
   position: relative;
-  aspect-ratio: 1;
   border-radius: 0.5rem;
   overflow: hidden;
+  aspect-ratio: 1 / 1;   /* 기본은 정사각형 */
 }
 
-/* 1개 이미지일 때 첫 번째 이미지를 1,2번 그리드에 걸쳐서 배치 */
+/* 1장일 때 첫 이미지 풀가로 */
 .imageGrid.single .imageContainer:first-child {
-  grid-column: 1 / 3;
+  grid-column: 1 / -1;
   grid-row: 1;
 }
 
+/* 이미지 태그 – 컨테이너 안에서만 표시(침범 방지) */
 .newsImage {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;   /* contain → cover 로 변경 (영역을 넘지 않게 내부에서 잘라냄) */
 }
 
+/* 로드 실패 플레이스홀더 */
 .imagePlaceholder {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background-color: #f0f0f0;
   border: 0.0625rem solid #E8F5E8;
   border-radius: 0.5rem;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   color: #666;
   font-size: 0.75rem;
-  display: none;
 }
+.imagePlaceholder.show { display: flex; }
 
-.imagePlaceholder.show {
-  display: flex;
-}
-
-
-
-/* Upload Button */
+/* ===== Upload Button ===== */
 .uploadButton {
   background-color: #018941;
-  color: white;
+  color: #fff;
   border: none;
   padding: 1rem;
   border-radius: 0.75rem;
@@ -238,23 +215,11 @@
   max-width: calc(23.4375rem - 2rem);
   z-index: 10;
 }
+.uploadButton:hover { background-color: #016f35; }
 
-.uploadButton:hover {
-  background-color: #016f35;
-}
-
-/* Responsive Design */
+/* ===== Responsive ===== */
 @media (max-width: 48rem) {
-  .container {
-    max-width: 100%;
-    margin: 0;
-  }
-  
-  .header {
-    padding: 0;
-  }
-  
-  .previewContent {
-    margin: 0.75rem;
-  }
+  .container { max-width: 100%; margin: 0; }
+  .header { padding: 0; }
+  .previewContent { margin: 0.75rem; }
 }
