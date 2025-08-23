@@ -5,7 +5,7 @@ import s from "./familyCreateWiz.module.css";
 import { Relation } from "@/utils/types";
 import { useMemo, useState, useEffect, useCallback,useRef } from "react";
 import { useRouter } from "next/navigation";
-import { publicImageUrl, isFamilyNameDuplicated, supabase } from "@/utils/supabase/client";
+import { pageImageUrl, isFamilyNameDuplicated, supabase } from "@/utils/supabase/client";
 import { koToQwerty } from "@/utils/util";
 
 import CheckoutPage from "@/components/pay/checkOut"; // 결제 위젯 컴포넌트
@@ -191,7 +191,7 @@ export default function FamilyCreateWizard({
     }));
   };
 
-  const logo = publicImageUrl("deardreamLogo.png");
+  const logo = pageImageUrl("eardreamlogo-w.png");
   // 제로-위드 문자 제거
   const stripZeroWidth = (s: string) => s.replace(/[\u200B-\u200D\uFEFF]/g, '');
 
@@ -367,7 +367,7 @@ export default function FamilyCreateWizard({
   return (
     <div className={s.page}>
       <div className={s.logoBar}>
-        <img src={logo} alt="디어드림 로고" className={s.logo} />
+        <img src={pageImageUrl("eardreamlogo-w.png")} style={{ width: '9rem', height: '6rem' }} alt="디어드림 로고" className={s.logo} />
       </div>
 
       <div className={s.card}>

@@ -109,6 +109,29 @@ export function pageImageUrl(imgName: string) {
   return url && url.length > 0 ? url : undefined; // 빈 문자열이면 undefined
 }
 
+export async function newsImageUrl(month: string): Promise<string[]> {
+  const bucket = "avatars";
+  const prefix = `message/${month}`; // 예: message/202507
+
+  // 폴더 목록 조회
+  const { data, error } = await supabase.storage.from(bucket).list(prefix, {
+    limit: 1000,
+    sortBy: { column: "name", order: "asc" },
+  });
+  if (error) throw error;
+
+  // 파일만 골라서 URL 생성 (폴더 항목 제외)
+  const files = (data ?? []).filter((item) => item.id || item.metadata);
+  return files
+    .map(
+      (f) =>
+        supabase.storage.from(bucket).getPublicUrl(`${prefix}/${f.name}`).data
+          .publicUrl
+    )
+    .filter((url): url is string => !!url && url.trim().length > 0);
+}
+
+
 export async function isFamilyNameDuplicated(name: string) {
   const { count, error } = await supabase
     .from("families")
@@ -181,3 +204,18 @@ export const participateFamily = async (params: {
   }
   return true;
 };
+
+export const fetchFamilyMonth = async (userId: string): Promise<string[]> => {
+  const familyId = await fetchFamilyId(userId);
+
+  const {data,error} = await supabase
+    .from("news")
+    .select("news_month")
+    .eq("family_id", familyId);
+
+  if (error) {
+    console.error("Error fetching family months:", error);
+    return [];
+  }
+  return data.map(item => item.news_month);
+}

@@ -1,3 +1,37 @@
+@font-face {
+  font-family: 'SeoulHangang';
+  src: url('/font/SeoulHangangB.ttf') format('truetype');
+  font-weight: 700;      /* 이 파일이 Bold라면 700 */
+  font-style: normal;
+  font-display: swap;
+}
+/* Light (보통 300) */
+@font-face {
+  font-family: 'SeoulHangang';
+  src: url('/font/SeoulHangangL.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Medium (보통 500) */
+@font-face {
+  font-family: 'SeoulHangang';
+  src: url('/font/SeoulHangangM.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ExtraBold (보통 800) */
+@font-face {
+  font-family: 'SeoulHangang';
+  src: url('/font/SeoulHangangEB.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* app/globals.css */
 :root{
   --brand:#018941;
@@ -5,6 +39,7 @@
   --text-weak:#2b4a3e;
   --bg:#f7faf8;
 }
+
 
 *{ box-sizing:border-box; }
 html,body{ height:100%; }

@@ -23,7 +23,7 @@ export default function FamilyInvitePage() {
       alert("복사에 실패했어요. 다시 시도해 주세요.");
     }
   };
-  const logo = publicImageUrl("deardreamLogo.png");
+  const logo = publicImageUrl("eardreamlogo-w.png");
 
   useEffect(() => {
     // const familyInviteCode = searchParams.get("familyId") as string;

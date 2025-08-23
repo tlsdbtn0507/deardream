@@ -33,7 +33,7 @@ export default function TopNav() {
     checkisLoggedIn();
   }, []);
 
-  const logoImgUrl = publicImageUrl('deardreamLogo.png');
+  const logoImgUrl = pageImageUrl('eardreamlogo-w.png');
   const mypageLogoImgUrl = pageImageUrl('profile.png');
 
   const gotoMypage = () => {
@@ -46,7 +46,7 @@ export default function TopNav() {
   }
   return (
     <div className={styles.topNav}>
-      <img src={logoImgUrl} alt=""/>
+      <img src={logoImgUrl} style={{ cursor: 'pointer',width:'9rem',height:'3rem' }} alt=""/>
       <img onClick={gotoMypage} src={mypageLogoImgUrl} alt=""/>
     </div>
   )
