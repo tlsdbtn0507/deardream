@@ -39,3 +39,16 @@ export function relationLabel(relation?: string | null): string {
   const key = relation as KinRole;
   return KIN_ROLE_LABEL_KO[key] ?? KIN_ROLE_LABEL_KO['other'];
 }
+
+export type PostType = {
+  id: string;
+  family_id: string;
+  author_id: string;
+  body: string | null;
+  images: string[]; // text[]
+  created_at: string;
+  updated_at: string;
+  author_name: string | null;
+  author_relation: string | null;
+  author_profile_image: string;
+};

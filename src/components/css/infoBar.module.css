@@ -1,0 +1,45 @@
+.infoBar {
+  padding: 1rem 1.25rem;
+  background: #fff;
+  border: 1px solid #d0d7dc;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  border-radius: 0.5rem;
+}
+
+.infoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex: 1;
+}
+
+.infoIcon {
+  width: 1.625rem;
+  height: 1.625rem;
+  object-fit: contain;
+}
+
+.infoText {
+  font-size: 0.675rem;
+  color: #000;
+  font-weight: 700;
+  flex: 1;
+  white-space: nowrap;
+  line-height: 1.1;
+}
+
+.infoBadge {
+  background: #018941;
+  color: #fff;
+  padding: 0.1875rem 0.5rem;
+  border-radius: 0.625rem;
+  font-size: 1rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.dDayBadge {
+  background: #018941;
+}

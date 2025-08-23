@@ -1,0 +1,520 @@
+/* 이어드림 앱 스타일 */
+.container {
+  max-width: 23.4375rem;
+  margin: 0 auto;
+  background: #ffffff;
+  min-height: 100vh;
+  position: relative;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow-y: scroll;
+  padding-bottom: 5rem; /* 하단 네비게이션 높이만큼 여백 추가 */
+  box-shadow: 0 0 1.25rem rgba(0, 0, 0, 0.1);
+  
+  /* 스크롤바 숨김 */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* Webkit 브라우저용 스크롤바 숨김 */
+.container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, #018941, #018941);
+  color: white;
+}
+
+.logoSection {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.03125rem;
+  width: 4rem;
+  height: 1.5rem;
+  object-fit: contain;
+}
+
+.headerIcons {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: contain;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.deliveryIcon {
+  margin-right: 0.5rem;
+}
+
+.icon:hover {
+  opacity: 0.7;
+}
+
+/* Profile Section */
+.profileSection {
+  padding: 1.25rem;
+  /* background: #f8f9fa; */
+}
+
+.profileList {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  padding-bottom: 0.5rem; /* 스크롤바 공간 확보 */
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  scroll-behavior: smooth;
+}
+
+.profileList:active {
+  cursor: grabbing;
+}
+
+.profileList.dragging {
+  cursor: grabbing;
+  scroll-behavior: auto;
+}
+
+/* Webkit 브라우저용 프로필 리스트 스크롤바 숨김 */
+.profileList::-webkit-scrollbar {
+  display: none;
+}
+
+.profileItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.profileCircle {
+  width: 3.75rem;
+  height: 3.75rem;
+  border-radius: 50%;
+  /* background: #e9ecef; */
+  border: 0.125rem solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.profileItem.selected .profileCircle {
+  border-color: #018941;
+  background: #f1f8e9;
+}
+
+.selectedIndicator {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: #018941;
+  position: absolute;
+  bottom: -0.125rem;
+  right: -0.125rem;
+}
+
+.profileName {
+  font-size: 0.75rem;
+  color: #495057;
+  font-weight: 500;
+}
+
+.profileDots {
+  display: flex;
+  justify-content: center;
+  gap: 0.375rem;
+}
+
+.dot {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 50%;
+  background: #dee2e6;
+}
+
+.dot.active {
+  background: #018941;
+}
+
+/* Info Bar */
+.infoBar {
+  padding: 1rem 1.25rem;
+  background: white;
+  border-bottom: 0.0625rem solid #e9ecef;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.infoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex: 1;
+}
+
+.infoIcon {
+  font-size: 1rem;
+  width: 1.625rem;
+  height: 1.625rem;
+  object-fit: contain;
+}
+
+.infoText {
+  font-size: 1rem;
+  color: #000000;
+  font-weight: bold;
+  flex: 1;
+  white-space: nowrap;
+}
+
+.infoBadge {
+  background: #018941;
+  color: white;
+  padding: 0.1875rem 0.5rem;
+  border-radius: 0.625rem;
+  font-size: 1rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Main Content */
+.mainContent {
+  padding: 1.25rem;
+  position: relative;
+}
+
+.timeline {
+  display: none;
+}
+
+/* Post Card */
+.postCard {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  margin-left: 0;
+}
+
+/* Feed Container */
+.feedContainer {
+  background: white;
+  border-radius: 0.75rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.postHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 0.0625rem solid #f1f3f4;
+}
+
+.postAuthor {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.authorAvatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-size: cover;       /* 꽉 채우기 */
+  background-position: center;  /* 가운데 정렬 */
+  background-repeat: no-repeat; /* 반복 금지 */
+
+}
+
+.authorIndicator {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #018941;
+  position: absolute;
+  bottom: -0.125rem;
+  right: -0.125rem;
+}
+
+.authorInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.authorName {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #018941;
+}
+
+.authorTag {
+  background: #e8f5e8;
+  color: #018941;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.postActions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.actionIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: contain;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.actionIcon:hover {
+  opacity: 0.7;
+}
+
+.postDate {
+  /* padding: 0.25rem 1rem; */
+  font-size: 0.8rem;
+  color: #018941;
+  font-weight: 500;
+  /* border-bottom: 0.0625rem solid #f1f3f4; */
+  /* background: #f8f9fa; */
+}
+
+/* Post Image */
+.postImage {
+  position: relative;
+}
+
+.imagePlaceholder {
+  width: 100%;
+  height: 18.75rem;
+  background: linear-gradient(135deg, #018941, #018941);
+  position: relative;
+  overflow: hidden;
+}
+
+.familyPhoto {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.familyPhoto {
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+.familyPhoto.dragging {
+  cursor: grabbing;
+  transition: none !important;
+}
+
+.familyPhoto.animating {
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.familyPhoto.slideLeft {
+  transform: translateX(-100%);
+}
+
+.familyPhoto.slideRight {
+  transform: translateX(100%);
+}
+
+.familyPhoto.slideCenter {
+  transform: translateX(0);
+}
+
+.familyMembers {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: center;
+}
+
+.memberRow {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.member {
+  font-size: 2rem;
+  filter: drop-shadow(0 0.125rem 0.25rem rgba(0, 0, 0, 0.2));
+}
+
+.imageOverlay {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.imageCounter {
+  background: rgba(255, 255, 255, 0.9);
+  color: #018941;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.imageLogo {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Post Text */
+.postText {
+  padding: 1rem 1.25rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #212529;
+  background: white;
+  border-bottom: 0.0625rem solid #f1f3f4;
+}
+
+/* Post Footer */
+.postFooter {
+  display: flex;
+  gap: 0.25rem;
+  /* padding: -10px; */
+  border-top: 0.0625rem solid #f1f3f4;
+}
+
+.postAction {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+  border-radius: 1.25rem;
+  transition: background-color 0.2s ease;
+}
+
+.postAction:hover {
+  background: #f8f9fa;
+}
+
+.postAction .actionIcon {
+  font-size: 1rem;
+}
+
+.commentCount {
+  font-size: 0.75rem;
+  color: #6c757d;
+  font-weight: 500;
+  margin-left: 0.25rem;
+}
+
+/* Additional Content */
+.additionalContent {
+  margin-top: 1.25rem;
+}
+
+/* 빈 상태 */
+.emptyState {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 12.5rem;
+  background-color: #f8f9fa;
+  border-radius: 0.75rem;
+  margin: 1rem;
+}
+
+.emptyState p {
+  color: #666;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 25.875rem) {
+  .container {
+    max-width: 100%;
+  }
+}
+
+/* Hover Effects */
+@media (hover: hover) {
+  .profileItem:hover .profileCircle {
+    transform: scale(1.05);
+  }
+}
+
+/* Onboarding Modal */
+.onboardingOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.onboardingImage {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.onboardingImage:hover {
+  transform: scale(1.02);
+}
+
+
+
+

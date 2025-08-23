@@ -1,0 +1,80 @@
+.profileSection {
+  padding: 1.25rem;
+  /* background: #f8f9fa; */
+}
+
+.profileList {
+  display: flex;
+  gap: 1rem;
+  /* margin-bottom: 0.75rem; */
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  padding-bottom: 0.5rem;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  scroll-behavior: smooth;
+}
+.profileList::-webkit-scrollbar { display: none; }
+
+.profileList:active { cursor: grabbing; }
+.dragging { cursor: grabbing; scroll-behavior: auto; }
+
+.profileItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+/* 원본 */
+.profileCircle {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  /* 배경 이미지를 깔끔하게 보이게 */
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: #e9ecef; /* placeholder 색 */
+  border: 0.125rem solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.selected .profileCircle {
+  border-color: #018941;
+}
+
+.selectedIndicator {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: #018941;
+  position: absolute;
+  bottom: -0.125rem;
+  right: -0.125rem;
+}
+
+.profileName {
+  font-size: 0.75rem;
+  color: #495057;
+  font-weight: 500;
+}
+
+/* hover 효과는 선택사항 */
+@media (hover: hover) {
+  .profileItem:hover .profileCircle {
+    transform: scale(1.05);
+  }
+}

@@ -22,6 +22,16 @@ type UserInfoForWrite = {
   relation: Relation;
 };
 
+type FamilyMember = {
+  family_id: string;
+  user_id: string;
+  role: 'owner' | 'member' | 'admin' | string;
+  nickname: string | null;
+  joined_at: string;
+  relation: Relation;
+  profile_image: string | null;
+}
+
 export default function WriteNewsPage() {
   const [selectedNav, setSelectedNav] = useState<NavKey>('write');
   const [text, setText] = useState('');
@@ -72,7 +82,7 @@ export default function WriteNewsPage() {
 
     const fetchFamAndUserInfo = async (userId:string) => {
       const userInfo = await fetchUserInfo(userId);
-      const familyInfo = await fetchUserFamily(userId);
+      const familyInfo = await fetchUserFamily(userId) as FamilyMember[];
       if (!userInfo) {
         alert("로그인 후 사용해주세요.");
         router.push("/login");
@@ -85,16 +95,18 @@ export default function WriteNewsPage() {
       }
 
       const userObj: UserInfoForWrite = {
-        nickName: familyInfo.nickName ?? userInfo.full_name,
+        nickName: familyInfo[0].nickname ?? userInfo.full_name,
         profile_image: userInfo.profile_image,
-        relation: relationLabel(familyInfo.relation) as Relation
+        relation: relationLabel(familyInfo[0].relation) as Relation
       };
 
-      localStorage.setItem("userWritingInfo",JSON.stringify(userObj));
+      localStorage.setItem("userWritingInfo", JSON.stringify(userObj));
+
+      console.log("User information for writing:", userObj,familyInfo);
 
       setUserInfoForWriting(userObj);
       localStorage.setItem("essentialInfo",
-        JSON.stringify({ author_id: userInfo.user_id, family_id: familyInfo.family_id }));
+        JSON.stringify({ author_id: userInfo.user_id, family_id: familyInfo[0].family_id }));
       // setEssentialIds({ author_id: userInfo.id, family_id: familyInfo.family_id });
     };
 
