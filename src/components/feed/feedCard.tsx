@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react';
 import { pageImageUrl, deletePost } from '@/utils/supabase/client';
 import { relationLabel } from '@/utils/types';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 
 import styles from '../../app/main/main.module.css';
 
@@ -38,9 +38,9 @@ export default function FeedCard({
   onPrevImage,
   getCurrentImage,
   isAnimating,
-  setIsAnimating,
+  // setIsAnimating,
   slideClass,
-  setSlideClass,
+  // setSlideClass,
   date,
   commentCount = 0,
   text,
@@ -51,7 +51,7 @@ export default function FeedCard({
   const [currentX, setCurrentX] = useState(0);
   const [dragOffset, setDragOffset] = useState(0);
   const slideRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
+  // const router = useRouter();
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (isAnimating || totalImages === 0 || !slideRef.current) return;

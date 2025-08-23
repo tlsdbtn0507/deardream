@@ -49,13 +49,9 @@ export default function Main() {
         const members: FamilyMember[] | null = await fetchUserFamily(uid);
 
         if (cancelled) return;
-        if (members === null)  {
-          alert('가족 정보를 불러오지 못했습니다.');
-          router.push('/login');
-          return;
-        }
-
+        if (members === null) return;
         //next_closure_date = yyyy-mm-dd
+
         const { next_closure_date } = await fetchFamilyInfo(members[0].family_id);
         const posts = await fetchFamilyPosts(members[0].family_id);
 
@@ -110,38 +106,42 @@ export default function Main() {
 
       {!loading && (
         <>
-          {familyMembers.length > 0 ? (
-            <ProfileSection
-              profiles={familyMembers}
-              selectedIndex={0}
-              onSelect={(i) => console.log('Selected index:', i)}
-              className={styles.profileSection}
-            />
-          ) : (
-            <InviteOrCreate userId={userUid} />
-          )}
+          {
+            familyMembers.length > 0 ? (
+            <>
+              <ProfileSection
+                profiles={familyMembers}
+                selectedIndex={0}
+                onSelect={(i) => console.log('Selected index:', i)}
+                className={styles.profileSection}
+                />
+                {/* Info Bar */}
+                <div className={styles.infoWrap}>
+                  <InfoBar
+                    dday={(closureDate ? Math.ceil((closureDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)) : 0)}
+                    remainingCount={20 - familyPosts.length} />
+                </div>
+                <main className={styles.mainContent}>
+                  {
+                    familyPosts.length > 0 ? (
+                      familyPosts.map((post) => (
+                        <FeedComponent key={post.id} postProps={post} onDelete={handleDeletePost} />
+                      ))
+                    ) : (
+                      <div className={styles.noPosts}>가족의 게시물이 없습니다.</div>
+                    )
+                  }
+                </main>
+                <BottomNavigation selectedNav="home" onNavChange={() => { }} onHomeClick={() => { }} />
+              </>
+            ) : (
+              <InviteOrCreate userId={userUid} />
+            )}
 
-          {/* Info Bar */}
-          <div className={styles.infoWrap}>
-            <InfoBar
-              dday={(closureDate ? Math.ceil((closureDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)) : 0)}
-              remainingCount={20 - familyPosts.length} />
-          </div>
-          <main className={styles.mainContent}>
-            {
-              familyPosts.length > 0 ? (
-                familyPosts.map((post) => (
-                  <FeedComponent key={post.id} postProps={post} onDelete={handleDeletePost} />
-                ))
-              ) : (
-                <div className={styles.noPosts}>가족의 게시물이 없습니다.</div>
-              )
-            }
-          </main>
         </>
       )}
 
-      <BottomNavigation selectedNav="home" onNavChange={() => { }} onHomeClick={() => { }} />
+
     </div>
   );
 }

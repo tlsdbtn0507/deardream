@@ -6,57 +6,146 @@
   max-width: 28rem; /* ~448px */
 }
 
+.pageTitle {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #018941;
+  margin: 0;
+}
+
 .card {
   background: #ffffff;
-  border: 0.125rem solid #018941;         /* 메인 그린 */
-  border-radius: 1.25rem;                  /* 20px */
-  padding: 2rem 1.5rem;
-  box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.03);
+  border-radius: 1.25rem;
+  padding: 1.25rem 1.25rem 1.5rem;
 }
 
-.title {
-  color: #374151;                          /* 텍스트 기본 */
+
+/* 상단 연한 그린 배너(스샷 느낌) */
+.banner {
+  background: #ecf7f1;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.bannerText {
+  margin: 0;
+  color: #0d5132;
   text-align: center;
-  line-height: 1.35;
-  font-weight: 700;
-  font-size: clamp(1.125rem, 2.5vw, 1.375rem);
-  margin: 0 0 1.5rem;
+  line-height: 1.45;
+  font-weight: 800;
+  font-size: 1.25rem;
 }
 
+/* 폼 */
 .form {
   display: grid;
   gap: 1rem;
 }
 
-.input {
+/* 밑줄 인풋 스타일 */
+.underlineInput {
   width: 100%;
   background: transparent;
   border: none;
-  border-bottom: 0.125rem solid #e5e7eb;   /* 하단 라인 */
-  padding: 0.75rem 0.25rem;
+  border-bottom: 0.125rem solid #e5e7eb;
+  padding: 0.9rem 0.25rem;
   font-size: 1rem;
   color: #374151;
   outline: none;
 }
 
-.input::placeholder {
-  color: #9ca3af;                          /* 비활성 텍스트 */
+.underlineInput::placeholder {
+  color: #9ca3af;
 }
 
-.input:focus {
+.underlineInput:focus {
   border-color: #018941;
-  box-shadow: 0 0 0 0.25rem rgba(1, 137, 65, 0.25); /* 포커스 링 */
+  box-shadow: 0 0 0 0.25rem rgba(1, 137, 65, 0.15);
 }
 
+/* 라벨/필수 표시 */
+.fieldLabel {
+  font-size: 0.95rem;
+  color: #064e3b;
+  font-weight: 700;
+}
+
+.required {
+  color: #ef4444;
+}
+
+/* 셀렉트 + 작은 버튼 한 줄 */
+.row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+/* 커스텀 셀렉트 */
+.selectWrap {
+  position: relative;
+}
+
+.select {
+  width: 100%;
+  height: 2.75rem;
+  border-radius: 0.625rem;
+  border: 1px solid #e5e7eb;
+  padding: 0 2.25rem 0 0.875rem;
+  font-size: 0.95rem;
+  background-color: #fff;
+  color: #111827;
+  appearance: none;
+  outline: none;
+}
+
+.select:focus {
+  border-color: #018941;
+  box-shadow: 0 0 0 0.2rem rgba(1, 137, 65, 0.15);
+}
+
+/* 드롭다운 화살표 */
+.chevron {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid #6b7280;
+  border-bottom: 2px solid #6b7280;
+  transform: translateY(-50%) rotate(45deg);
+  pointer-events: none;
+}
+
+.smallBtn {
+  border: none;
+  background: #018941;
+  color: #fff;
+  font-weight: 700;
+  padding: 0.65rem 0.9rem;
+  border-radius: 0.625rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 120ms ease, transform 120ms ease, background 120ms ease;
+}
+
+.smallBtn:hover {
+  opacity: 0.95;
+  transform: translateY(-1px);
+}
+
+/* 메인 CTA 버튼 */
 .primaryBtn {
   width: 100%;
   border: none;
   border-radius: 0.75rem;
   background: #018941;
   color: #ffffff;
-  font-weight: 700;
-  font-size: 1rem;
-  padding: 0.9rem 1rem;
+  font-weight: 800;
+  font-size: 1.05rem;
+  padding: 0.95rem 1rem;
   cursor: pointer;
   transition: transform 120ms ease, opacity 120ms ease, background 120ms ease;
 }

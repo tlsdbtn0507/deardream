@@ -3,7 +3,6 @@ import styles from './page.module.css';
 import BottomNavigation from '@/components/bottomNavigation';
 
 import { useState, useEffect } from 'react';
-import { useFeed } from '@/components/context/feedContext';
 import {
   pageImageUrl,
   fetchUserInfo,
@@ -38,12 +37,7 @@ export default function WriteNewsPage() {
   const [images, setImages] = useState<string[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const [essentialIds, setEssentialIds] = useState({
-    author_id: '',
-    family_id:''
-  })
-
-  const { addPost } = useFeed();
+  const [working, setWorking] = useState(false);
 
   const [userInfoForWriting, setUserInfoForWriting] = useState<UserInfoForWrite>(
     {
@@ -107,10 +101,10 @@ export default function WriteNewsPage() {
       setUserInfoForWriting(userObj);
       localStorage.setItem("essentialInfo",
         JSON.stringify({ author_id: userInfo.user_id, family_id: familyInfo[0].family_id }));
-      // setEssentialIds({ author_id: userInfo.id, family_id: familyInfo.family_id });
     };
 
     const isEssentialHas = localStorage.getItem("essentialInfo");
+
     if (!isEssentialHas) {
       fetchFamAndUserInfo(userId);
       return
@@ -211,6 +205,7 @@ export default function WriteNewsPage() {
 
 
   const handleComplete = async () => {
+    setWorking(true);
     // 작성 완료 로직
     const imageUrls = await saveImgsToStorage(images);
     // 미리보기 데이터를 세션스토리지에 저장
@@ -222,7 +217,7 @@ export default function WriteNewsPage() {
     };
 
     sessionStorage.setItem('previewData', JSON.stringify(previewData));
-
+    setWorking(false);
     // 미리보기 페이지로 이동
     // window.location.href = '/news/preview';
     router.push('/news/preview');
@@ -235,6 +230,8 @@ export default function WriteNewsPage() {
   const handleCloseOnboarding = () => {
     setShowOnboarding(false);
   };
+  
+  const canSubmit = text.trim().length > 0 || images.length > 0;
 
   return (
     <div className={styles.container}>
@@ -342,9 +339,9 @@ export default function WriteNewsPage() {
       <button
         className={styles.completeButton}
         onClick={handleComplete}
-        disabled={!text.trim() && images.length === 0}
+        disabled={!canSubmit || working}
       >
-        작성 완료
+        { working ? '작성 중...' : '작성 완료'}
       </button>
 
       {/* Bottom Navigation */}
