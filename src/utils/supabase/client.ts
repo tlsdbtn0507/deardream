@@ -38,7 +38,7 @@ export const fetchUserFamily = async (userId: string) => {
 
   if (error) {
     console.error("Error fetching family members:", error);
-    return [];
+    return null;
   }
   return data;
 };

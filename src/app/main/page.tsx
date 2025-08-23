@@ -49,7 +49,7 @@ export default function Main() {
         const members = await fetchUserFamily(uid);
         
         if (cancelled) return;
-        if (!members)  {
+        if (members === null)  {
           alert('가족 정보를 불러오지 못했습니다.');
           router.push('/login');
           return;
@@ -85,7 +85,7 @@ export default function Main() {
   const handleDeletePost = useCallback((deletedId: string) => {
     setFamilyPosts(prev => prev.filter(p => p.id !== deletedId));
   }, []);
-  
+
   // ② 에러: 메시지 표시
   if (error) {
     return (
