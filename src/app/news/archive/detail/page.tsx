@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 import styles from './page.module.css';
@@ -17,7 +17,7 @@ interface NewsItem {
   images: string[];
 }
 
-export default function ArchiveDetailPage() {
+function Inner() {
   const [selectedNav, setSelectedNav] = useState('message');
   const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
@@ -121,7 +121,7 @@ export default function ArchiveDetailPage() {
                 <div key={feed.id} className={styles.feedItem}>
                   {/* Profile Section with Text */}
                   <div className={styles.profileSectionWithText}>
-                    <img className={styles.profileImage} src="https://raksukmfixcxokoqewyn.supabase.co/storage/v1/object/public/avatars/message/202504/picOfGrandFa.png"/>
+                    <img className={styles.profileImage} src="https://raksukmfixcxokoqewyn.supabase.co/storage/v1/object/public/avatars/message/202504/picOfGrandFa.png" />
                     <div className={styles.profileInfo}>
                       <div className={styles.date}>{feed.date}</div>
                       <div className={styles.authorInfo}>
@@ -188,8 +188,16 @@ export default function ArchiveDetailPage() {
       <BottomNavigation
         selectedNav="message"
         onNavChange={setSelectedNav}
-        onHomeClick={() => (window.location.href = '/')}
+        onHomeClick={() => (router.push('/main'))}
       />
     </div>
+  );
+}
+
+export default function ArchiveDetailPage() {
+  return (
+    <Suspense fallback={<div style={{ padding: '1rem' }}>불러오는 중…</div>}>
+      <Inner />
+    </Suspense>
   );
 }
