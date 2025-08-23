@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { PostType } from "@/utils/types";
+import { PostType, FamilyMember } from "@/utils/types";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -26,7 +26,7 @@ const fetchFamilyId = async (userId: string) => {
 };
 
 // 헬퍼 함수들
-export const fetchUserFamily = async (userId: string) => {
+export const fetchUserFamily = async (userId: string): Promise<FamilyMember[] | null> => {
 
   const familyId = await fetchFamilyId(userId);
   if (!familyId) return null;

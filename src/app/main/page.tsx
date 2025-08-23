@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { supabase, fetchUserFamily, fetchFamilyInfo, fetchFamilyPosts } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
-import { PostType } from '@/utils/types';
+import { PostType, FamilyMember } from '@/utils/types';
 
 import ProfileSection from '@/components/profileSection/profileSection';
 import InviteOrCreate from '@/components/family/inviteOrCreate';
@@ -46,8 +46,8 @@ export default function Main() {
         }
         
         const uid = session.user.id;
-        const members = await fetchUserFamily(uid);
-        
+        const members: FamilyMember[] | null = await fetchUserFamily(uid);
+
         if (cancelled) return;
         if (members === null)  {
           alert('가족 정보를 불러오지 못했습니다.');
@@ -61,15 +61,17 @@ export default function Main() {
 
         if (cancelled) return;
 
+        const toSetFamMem = members!.map(member => ({
+          id: member.user_id,
+          name: member.nickname ?? '',
+          relation: member.relation,
+          avatarUrl: member.profile_image ?? ''
+        }))
+        
         setFamilyPosts(posts);
         setClosureDate(new Date(next_closure_date));
         setUserUid(uid);
-        setFamilyMembers(members!.map(member => ({
-          id: member.user_id,
-          name: member.nickname,
-          relation: member.relation,
-          avatarUrl: member.profile_image
-        })));
+        setFamilyMembers(toSetFamMem);
 
       } catch (e: any) {
         setError(e?.message ?? '가족 정보를 불러오지 못했습니다.');

@@ -4,6 +4,8 @@ export type FamilyMember = {
   role: "parent" | "child" | "other"; // enum family_role (실제 enum 정의에 맞게 수정)
   nickname: string | null; // text, nullable 가능성 고려
   joined_at: string;       // timestamptz (ISO 문자열로 반환됨)
+  relation: Relation; // text, nullable 가능성 고려
+  profile_image: string | null; // text, nullable 가능성 고려
 };
 
 export type Relation = | "" | 'son' | 'daughter'
