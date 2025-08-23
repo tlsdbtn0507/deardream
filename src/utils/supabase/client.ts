@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { PostType, FamilyMember } from "@/utils/types";
+import { PostType, FamilyMember, Relation } from "@/utils/types";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -147,3 +147,37 @@ export async function writePost(params: {
   }
   return true;
 }
+
+export const fetchFamilyIdwithCode = async (inviteCode: string) => {
+  const { data, error } = await supabase
+    .from("families")
+    .select("id")
+    .eq("invite_code", inviteCode)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Error fetching family ID with code:", error);
+    return null;
+  }
+  return data?.id;
+};
+
+export const participateFamily = async (params: {
+  userId: string;
+  familyId: string;
+  relation: Relation;
+  profileImage: string;
+  role: "parent" | "child" | null;
+}) => {
+  const { userId, familyId, relation, profileImage, role } = params;
+
+  const { error } = await supabase
+    .from("family_members")
+    .insert({ user_id: userId, family_id: familyId, role, relation, profile_image: profileImage });
+
+  if (error) {
+    console.error("Error participating in family:", error);
+    return false;
+  }
+  return true;
+};

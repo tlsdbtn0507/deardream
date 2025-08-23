@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { fetchUserInfo } from "@/utils/supabase/client";
+import { fetchUserInfo, fetchFamilyIdwithCode, participateFamily } from "@/utils/supabase/client";
 import type { Relation } from "@/utils/types";
 import s from "./inviteOrCreate.module.css";
 
@@ -23,9 +23,28 @@ const KIN_ROLE_LABEL_KO: Record<Relation | "", string> = {
   other: "기타",
 };
 
-type Props = { userId: string };
+// DB enum (family_role) – 여기서는 parent/child만 반환
+export type FamilyRole = 'owner' | 'admin' | 'parent' | 'child' | 'guest';
 
-export default function InviteOrCreate({ userId }: Props) {
+// child 로 묶을 집합
+const CHILD_RELATIONS = new Set<Relation>([
+  'grandson',
+  'granddaughter',
+  'great_grandson',
+  'great_granddaughter',
+  'nephew_or_niece',
+]);
+
+export function relationToFamilyRole(
+  relation: Relation | ''
+): Extract<FamilyRole, 'parent' | 'child'> | null {
+  if (!relation) return null;            // 아직 선택 안함
+  return CHILD_RELATIONS.has(relation) ? 'child' : 'parent';
+}
+
+type Props = { userId: string, onJoined?: () => Promise<void> | void };
+
+export default function InviteOrCreate({ userId, onJoined }: Props) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [inviteCode, setInviteCode] = useState("");
@@ -46,9 +65,19 @@ export default function InviteOrCreate({ userId }: Props) {
     setSubmitting(true);
     try {
       // 초대코드 + 관계와 함께 합류 페이지로
-      router.push(
-        `/family/join?code=${encodeURIComponent(inviteCode.trim())}&relation=${relation}`
-      );
+      const familyId = await fetchFamilyIdwithCode(inviteCode.trim());
+      const userId = JSON.parse(localStorage.getItem("sb-raksukmfixcxokoqewyn-auth-token") as string).user.id;
+      const { profile_image } = JSON.parse(localStorage.getItem("userWritingInfo") as string);
+
+      await participateFamily({ userId, familyId, relation, role: relationToFamilyRole(relation), profileImage: profile_image });
+
+      if (!familyId) {
+        alert("유효하지 않은 초대코드입니다.");
+        return;
+      }
+      alert("가족 그룹에 성공적으로 참여했습니다.");
+      await onJoined?.();
+      // router.refresh();
     } finally {
       setSubmitting(false);
     }
