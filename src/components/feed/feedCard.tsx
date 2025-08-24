@@ -14,7 +14,7 @@ interface FeedCardProps {
   totalImages: number;
   onNextImage: () => void;
   onPrevImage: () => void;
-  getCurrentImage: () => string; // css background-image 값 (url("...")) 형태를 반환한다고 가정
+  getCurrentImage: () => string; // css background-image 값 (url("...")) 형태
   isAnimating: boolean;
   date?: string;
   commentCount?: number;
@@ -38,10 +38,9 @@ export default function FeedCard({
   text,
   onDelete
 }: FeedCardProps) {
-
   const slideEl = useRef<HTMLDivElement>(null);
 
-  // 제스처 상태를 ref로 관리 (re-render 최소화)
+  // 제스처 상태를 ref로 관리
   const gs = useRef({
     dragging: false,
     pointerId: -1 as number,
@@ -52,27 +51,22 @@ export default function FeedCard({
     locked: null as null | 'x' | 'y',
   });
 
-  const SWIPE_DISTANCE = 60;      // 거리 임계치(px)
-  const LOCK_THRESHOLD = 8;       // 방향 잠금 임계치(px)
-  const FLICK_SPEED = 0.6;        // px/ms (빠르게 튕기면 거리 짧아도 전환)
-  const EDGE_RESIST = 0.35;       // 끝에서 반탄 비율
+  const SWIPE_DISTANCE = 60;   // px
+  const LOCK_THRESHOLD = 8;    // px
+  const FLICK_SPEED = 0.6;     // px/ms
+  const EDGE_RESIST = 0.35;
 
   const setTransform = (x: number, instant = false) => {
     const el = slideEl.current;
     if (!el) return;
-    if (instant) {
-      el.style.transition = 'none';
-    } else {
-      el.style.transition = 'transform 220ms ease';
-    }
+    el.style.transition = instant ? 'none' : 'transform 220ms ease';
     el.style.transform = `translateX(${x}px)`;
   };
-
   const resetTransform = () => setTransform(0, false);
 
   const onPointerDown: React.PointerEventHandler<HTMLDivElement> = (e) => {
     if (isAnimating || totalImages === 0) return;
-    // 멀티포인터/보조버튼 제외
+    // 마우스 보조버튼 무시
     if (e.pointerType === 'mouse' && e.button !== 0) return;
 
     gs.current.dragging = true;
@@ -94,7 +88,7 @@ export default function FeedCard({
     const dx = e.clientX - gs.current.startX;
     const dy = e.clientY - gs.current.startY;
 
-    // 아직 방향 잠금이 안 됐다면 결정
+    // 아직 방향 잠금 미결정 → 결정
     if (!gs.current.locked) {
       if (Math.abs(dx) > LOCK_THRESHOLD || Math.abs(dy) > LOCK_THRESHOLD) {
         gs.current.locked = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
@@ -103,7 +97,7 @@ export default function FeedCard({
       }
     }
 
-    // 세로 스크롤 우세 → 슬라이드 취소, transform 원복
+    // 세로 스크롤 우세 → 드래그 취소
     if (gs.current.locked === 'y') {
       gs.current.dragging = false;
       slideEl.current?.releasePointerCapture(gs.current.pointerId);
@@ -111,11 +105,10 @@ export default function FeedCard({
       return;
     }
 
-    // 가로 슬라이드 우세
-    e.preventDefault(); // 가로 슬라이드 중엔 브라우저 스크롤 방지
+    // 가로 슬라이드 우세 → 세로 스크롤 방지
+    e.preventDefault();
 
     let offset = dx;
-    // 첫 장에서 오른쪽으로, 마지막 장에서 왼쪽으로 끌면 저항
     if (currentImageIndex === 1 && dx > 0) {
       offset = dx * EDGE_RESIST;
     } else if (currentImageIndex === totalImages && dx < 0) {
@@ -127,15 +120,13 @@ export default function FeedCard({
   };
 
   const finishSwipe = (dir: 'next' | 'prev') => {
-    // 살짝 스냅 애니메이션 후 콜백
     const SNAP = dir === 'next' ? -40 : 40;
     setTransform(SNAP, false);
-    // 애니메이션 프레임 뒤에 원복 + 이미지 전환
+    // 다음 프레임 2번으로 부드럽게 연결
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        if (dir === 'next') onNextImage(); else onPrevImage();
-        // 다음 이미지로 바뀌면 배경이미지 자체가 바뀌므로 transform 0으로
-        setTransform(0, true);
+        dir === 'next' ? onNextImage() : onPrevImage();
+        setTransform(0, true); // 새 이미지로 바뀌면 transform 초기화
       });
     });
   };
@@ -147,7 +138,6 @@ export default function FeedCard({
     const dt = Math.max(1, performance.now() - gs.current.startTime);
     const speed = Math.abs(dx) / dt; // px/ms
 
-    // 결정되지 않았거나 세로 락이면 그냥 리셋
     if (gs.current.locked !== 'x') {
       resetTransform();
     } else {
@@ -167,6 +157,21 @@ export default function FeedCard({
     slideEl.current?.releasePointerCapture(gs.current.pointerId);
   };
 
+  // 🔹 엣지 탭존 핸들러 (드래그 시작 방지)
+  const stopPointerPropagation: React.PointerEventHandler<HTMLDivElement> = (e) => {
+    e.stopPropagation();
+  };
+  const onEdgePrevClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
+    e.stopPropagation();
+    if (isAnimating || currentImageIndex <= 1) return;
+    onPrevImage();
+  };
+  const onEdgeNextClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
+    e.stopPropagation();
+    if (isAnimating || currentImageIndex >= totalImages) return;
+    onNextImage();
+  };
+
   if (totalImages === 0) return null;
 
   const deleteImg = pageImageUrl('delete.png');
@@ -175,8 +180,7 @@ export default function FeedCard({
     e.preventDefault();
     if (!postId) return;
     if (confirm('이 게시물을 삭제하시겠습니까?')) {
-      // 외부에서 받는 onDelete만 호출 (실제 삭제 로직은 상위에서)
-      onDelete?.(postId);
+      onDelete?.(postId); // 실제 삭제는 상위에서 수행
     }
   };
 
@@ -213,12 +217,33 @@ export default function FeedCard({
           <div
             ref={slideEl}
             className={styles.familyPhoto}
-            style={{ backgroundImage: getCurrentImage() }}
+            style={{
+              backgroundImage: getCurrentImage(),
+              // 세로 스크롤은 허용, 가로 제스처는 코드가 판단
+              touchAction: 'pan-y',
+            }}
+            // 스와이프 제스처
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
             onPointerUp={onPointerUpOrCancel}
             onPointerCancel={onPointerUpOrCancel}
           >
+            {/* 🔹 좌/우 엣지 탭존 */}
+            <div
+              className={`${styles.edgeTapZone} ${styles.edgeLeft}`}
+              role="button"
+              aria-label="이전 이미지"
+              onPointerDown={stopPointerPropagation}
+              onClick={onEdgePrevClick}
+            />
+            <div
+              className={`${styles.edgeTapZone} ${styles.edgeRight}`}
+              role="button"
+              aria-label="다음 이미지"
+              onPointerDown={stopPointerPropagation}
+              onClick={onEdgeNextClick}
+            />
+
             <div className={styles.imageOverlay}>
               <div className={styles.imageCounter}>
                 {currentImageIndex}/{totalImages}
