@@ -7,12 +7,12 @@ export default function Home() {
       <section className="card" aria-labelledby="hero-title">
         <div className="brand">
           <span className="logo" aria-hidden="true" />
-          디어드림 DeerDream
+          이어드림 earDream
         </div>
 
         <h1 id="hero-title" className="h1">
           가족과 함께 쌓는 기록,
-          <br /> 오늘부터 디어드림으로.
+          <br /> 오늘부터 이어드림으로.
         </h1>
 
         <p className="p">

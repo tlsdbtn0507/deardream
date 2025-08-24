@@ -247,7 +247,6 @@ export default function MyPage() {
         <button className={s.logoutBtn} onClick={logout}>로그아웃</button>
       </div>
 
-      <BottomNavigation selectedNav="home" onNavChange={() => { }} onHomeClick={() => { }} />
     </div>
   );
 }
