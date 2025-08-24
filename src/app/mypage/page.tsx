@@ -2,12 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { supabase, pageImageUrl, fetchUserFamily, fetchUserInfo, fetchFamilyInfo } from '@/utils/supabase/client';
+import { relationLabel, FamilyMember } from '@/utils/types';
 
 import s from './page.module.css';
 import NewsTopNav from '@/components/newsTopNav';
 import BottomNavigation from '@/components/bottomNavigation';
-import { supabase, pageImageUrl, fetchUserFamily, fetchUserInfo } from '@/utils/supabase/client';
-import { relationLabel, FamilyMember } from '@/utils/types';
 
 
 function getUidMailFromLocal(): {uId:string,mail:string} | null {
@@ -34,6 +34,7 @@ export default function MyPage() {
     avatar: '',
     role: '',
   });
+  const [inviteCode, setInviteCode] = useState('');
 
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -64,9 +65,15 @@ export default function MyPage() {
         fetchUserFamily(uId) as unknown as FamilyMember[] | null,
       ]);
 
+      // const myFamilyInfo
+
       const myFamilyInfo = fam!.find(f => f.user_id === uId);
+      const { invite_code: myFamilyCode } = await fetchFamilyInfo(myFamilyInfo!.family_id);
+
+      setInviteCode(myFamilyCode);
 
       const roleKo = fam && myFamilyInfo ? relationLabel(myFamilyInfo.relation) : '';
+
       setProfile({
         name: u?.full_name ?? '',
         email: mail,                 // fetchUserInfo에 email 없으면 빈 값
@@ -179,6 +186,10 @@ export default function MyPage() {
               {profile.role && <span className={s.roleTag}>{profile.role}</span>}
             </div>
             <div className={s.email}>{profile.email}</div>
+            <div className={s.familyCode}>
+              <span className={s.familyCodeLabel}>가족 코드</span>
+              <span className={s.familyCodeValue}>{inviteCode}</span>
+            </div>
           </div>
 
         </div>

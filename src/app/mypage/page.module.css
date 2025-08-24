@@ -52,7 +52,7 @@
   gap: 0.5rem;
 }
 .name {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 800;
   color: #018941;
 }
@@ -195,4 +195,20 @@
   padding: 2rem 1.25rem;
   text-align: center;
   color: #6b7280;
+}
+
+.familyCode {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1rem;
+}
+.familyCodeLabel{
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #018941;;
+}
+.familyCodeValue{
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #018941;;
 }
