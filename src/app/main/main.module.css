@@ -251,7 +251,6 @@
   background-size: cover;       /* 꽉 채우기 */
   background-position: center;  /* 가운데 정렬 */
   background-repeat: no-repeat; /* 반복 금지 */
-
 }
 
 .authorIndicator {
@@ -304,12 +303,9 @@
 }
 
 .postDate {
-  /* padding: 0.25rem 1rem; */
   font-size: 0.8rem;
   color: #018941;
   font-weight: 500;
-  /* border-bottom: 0.0625rem solid #f1f3f4; */
-  /* background: #f8f9fa; */
 }
 
 /* Post Image */
@@ -317,6 +313,7 @@
   position: relative;
 }
 
+/* (과거용) 고정 높이 placeholder — 지금은 imageStage 사용 */
 .imagePlaceholder {
   width: 100%;
   height: 18.75rem;
@@ -325,6 +322,79 @@
   overflow: hidden;
 }
 
+/* -------------------------------------------- */
+/*      ✅ 새 슬라이드 시스템(두 장 겹침)         */
+/* -------------------------------------------- */
+
+/* 사진 스테이지: 높이를 'aspect-ratio'로 확보 */
+/* ★ 변경/추가 */
+.imageStage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;     /* 원하는 비율로 조정 가능 */
+  overflow: hidden;
+  border-radius: 14px;
+  background: #f5f5f5;
+}
+
+/* 슬라이드 패널(현재/고스트 공통) */
+/* ★ 변경/추가 */
+.slidePane {
+  position: absolute;
+    will-change: transform, background-image;
+  backface-visibility: hidden;
+  transform: translate3d(0,0,0);
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translateX(0);
+  transition: transform 220ms ease;
+  will-change: transform;
+  backface-visibility: hidden;
+  z-index: 2;   /* current 기본 위 */
+}
+
+/* 고스트 패널 기본 z-index 아래 */
+/* ★ 변경/추가 */
+.slidePane.ghost { z-index: 1; }
+
+/* 좌/우 버튼 */
+/* (기존 정의 보강) */
+.edgePrev,
+.edgeNext {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: rgba(255,255,255,0.9);
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  font-size: 20px;
+  line-height: 36px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,.12);
+  cursor: pointer;
+  user-select: none;
+  z-index: 3; /* ★ 사진 위에 클릭 가능 */
+}
+.edgePrev { left: 8px; }
+.edgeNext { right: 8px; }
+
+/* 하단 페이지 라벨(현재/전체) */
+.pagePill {
+  margin: 0 9rem 0 9rem;
+  display: inline-block;
+  padding: 6px 14px;
+  background: #E0FFEB;
+  color: #018941;
+  font-weight: 700;
+  border-radius: 999px;
+  font-size: 14px;
+}
+
+/* (구 슬라이드용 스타일 — 필요없으면 제거 가능) */
 .familyPhoto {
   width: 100%;
   height: 100%;
@@ -333,55 +403,14 @@
   background-repeat: no-repeat;
   position: relative;
 }
+.familyPhoto { cursor: grab; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); will-change: transform; }
+.familyPhoto.dragging { cursor: grabbing; transition: none !important; }
+.familyPhoto.animating { transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+.familyPhoto.slideLeft { transform: translateX(-100%); }
+.familyPhoto.slideRight { transform: translateX(100%); }
+.familyPhoto.slideCenter { transform: translateX(0); }
 
-.familyPhoto {
-  cursor: grab;
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  will-change: transform;
-}
-
-.familyPhoto.dragging {
-  cursor: grabbing;
-  transition: none !important;
-}
-
-.familyPhoto.animating {
-  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.familyPhoto.slideLeft {
-  transform: translateX(-100%);
-}
-
-.familyPhoto.slideRight {
-  transform: translateX(100%);
-}
-
-.familyPhoto.slideCenter {
-  transform: translateX(0);
-}
-
-.familyMembers {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  align-items: center;
-}
-
-.memberRow {
-  display: flex;
-  gap: 1.25rem;
-}
-
-.member {
-  font-size: 2rem;
-  filter: drop-shadow(0 0.125rem 0.25rem rgba(0, 0, 0, 0.2));
-}
-
+/* 오버레이 */
 .imageOverlay {
   position: absolute;
   bottom: 1rem;
@@ -421,7 +450,6 @@
 .postFooter {
   display: flex;
   gap: 0.25rem;
-  /* padding: -10px; */
   border-top: 0.0625rem solid #f1f3f4;
 }
 
@@ -435,13 +463,9 @@
   transition: background-color 0.2s ease;
 }
 
-.postAction:hover {
-  background: #f8f9fa;
-}
+.postAction:hover { background: #f8f9fa; }
 
-.postAction .actionIcon {
-  font-size: 1rem;
-}
+.postAction .actionIcon { font-size: 1rem; }
 
 .commentCount {
   font-size: 0.75rem;
@@ -451,9 +475,7 @@
 }
 
 /* Additional Content */
-.additionalContent {
-  margin-top: 1.25rem;
-}
+.additionalContent { margin-top: 1.25rem; }
 
 /* 빈 상태 */
 .emptyState {
@@ -474,16 +496,12 @@
 
 /* Responsive Design */
 @media (max-width: 25.875rem) {
-  .container {
-    max-width: 100%;
-  }
+  .container { max-width: 100%; }
 }
 
 /* Hover Effects */
 @media (hover: hover) {
-  .profileItem:hover .profileCircle {
-    transform: scale(1.05);
-  }
+  .profileItem:hover .profileCircle { transform: scale(1.05); }
 }
 
 /* Onboarding Modal */
@@ -510,26 +528,21 @@
   cursor: pointer;
   transition: transform 0.2s ease;
 }
-
-.onboardingImage:hover {
-  transform: scale(1.02);
-}
+.onboardingImage:hover { transform: scale(1.02); }
 
 .slider { touch-action: pan-y; will-change: transform; }
 
-/* 사진 뷰포트 */
+/* (구) 정사각 슬라이더 — 필요없으면 제거 가능 */
 .viewport {
   position: relative;
   width: 100%;
-  padding-top: 100%;         /* 정사각 비율 유지 (원래 비율에 맞게 바꿔도 됨) */
+  padding-top: 100%;
   overflow: hidden;
   border-radius: 1rem;
   background: #fff;
-  touch-action: pan-y;       /* 세로 스크롤은 유지, 가로는 우리가 처리 */
+  touch-action: pan-y;
   user-select: none;
 }
-
-/* 실제 슬라이드 조각 */
 .pane {
   position: absolute;
   inset: 0;
@@ -538,19 +551,3 @@
   will-change: transform;
   transform: translateX(0);
 }
-
-/* 좌우 가장자리 클릭 영역(투명 버튼) */
-.edgePrev,
-.edgeNext {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 2rem;              /* 필요하면 0.2rem 등으로 */
-  opacity: 0;               /* 시각적으로 투명, 클릭만 */
-}
-.edgePrev { left: 0; }
-.edgeNext { right: 0; }
-
-/* 카운터는 네가 쓰던 스타일 유지 */
-.imageOverlay { /* 기존과 동일하게 */ }
-.imageCounter  { /* 기존과 동일 */ }
