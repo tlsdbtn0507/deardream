@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
-import { pageImageUrl } from '@/utils/supabase/client';
+import { pageImageUrl, deletePost } from '@/utils/supabase/client';
 import { relationLabel } from '@/utils/types';
 import styles from '../../app/main/main.module.css';
 
@@ -260,10 +260,11 @@ export default function FeedCard({
   };
 
   // 삭제
-  const removePost: React.MouseEventHandler<HTMLImageElement> = (e) => {
+  const removePost: React.MouseEventHandler<HTMLImageElement> = async (e) => {
     e.preventDefault();
     if (!postId) return;
     if (confirm('이 게시물을 삭제하시겠습니까?')) {
+      await deletePost(postId);
       onDelete?.(postId);
     }
   };
