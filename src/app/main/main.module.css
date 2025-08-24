@@ -515,6 +515,6 @@
   transform: scale(1.02);
 }
 
-
+.slider { touch-action: pan-y; will-change: transform; }
 
 

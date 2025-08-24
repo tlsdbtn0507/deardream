@@ -107,7 +107,7 @@ export default function Main() {
             <>
               <ProfileSection
                 profiles={familyMembers}
-                selectedIndex={0}
+                selectedIndex={userUid}
                 onSelect={(i) => console.log('Selected index:', i)}
                 className={styles.profileSection}
               />

@@ -13,7 +13,7 @@ export type Profile = {
 
 type Props = {
   profiles: Profile[];
-  selectedIndex: number;
+  selectedIndex: string;
   onSelect: (index: number) => void;
   className?: string;
 };
@@ -88,11 +88,11 @@ export default function ProfileSection({
           <button
             key={`${p.name}-${i}`}
             type="button"
-            className={`${s.profileItem} ${selectedIndex === i ? s.selected : ''}`}
+            className={`${s.profileItem} ${selectedIndex === p.id ? s.selected : ''}`}
             onClick={() => onSelect(i)}
           >
             <div className={s.profileCircle} style={{ backgroundImage: p.avatarUrl ? `url(${p.avatarUrl})` : undefined }}>
-              {selectedIndex === i && <div className={s.selectedIndicator} />}
+              {selectedIndex === p.id && <div className={s.selectedIndicator} />}
             </div>
               <span className={s.profileName}>{!p.name ? relationLabel(p.relation) : p.name}</span>
           </button>
