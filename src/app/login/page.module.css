@@ -1,0 +1,281 @@
+/* 로그인 페이지 스타일 */
+.container {
+  max-width: 23.4375rem;
+  margin: 0 auto;
+  background: #ffffff;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 상단 헤더 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.logoSection {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoImage {
+  width: 8rem;
+  height: auto;
+  object-fit: contain;
+  margin-top: var(--login-form-margin-top, 3rem);
+}
+
+.signUpLink {
+  position: absolute;
+  right: 0;
+  top: 8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: none;
+  border: none;
+  color: #018941;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+.signUpLink:hover {
+  background-color: #f8f9fa;
+}
+
+.arrowIcon {
+  width: 0.75rem;
+  height: 0.75rem;
+  object-fit: contain;
+}
+
+/* 로그인 폼 */
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex: 1;
+  margin-top: var(--login-form-margin-top, 8rem);
+ 
+  transform: translateX(var(--login-form-translate-x, 0)) translateY(var(--login-form-translate-y, 0));
+}
+
+ .inputGroup {
+   display: flex;
+   flex-direction: column;
+   gap: 0.5rem;
+   margin-top: var(--input-group-margin-top, -1rem);
+   transform: translateX(var(--input-group-translate-x, 0)) translateY(var(--input-group-translate-y, 0));
+ }
+
+.inputLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 0.25rem;
+}
+
+.inputField {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 0.0625rem solid #dee2e6;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  background: #ffffff;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.inputField:focus {
+  outline: none;
+  border-color: #018941;
+  box-shadow: 0 0 0 0.125rem rgba(1, 137, 65, 0.1);
+}
+
+.inputField::placeholder {
+  color: #adb5bd;
+}
+
+/* 비밀번호 컨테이너 */
+.passwordContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s ease;
+}
+
+.passwordToggle:hover {
+  background-color: #f8f9fa;
+}
+
+.eyeIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  object-fit: contain;
+  opacity: 0.6;
+}
+
+/* 옵션 섹션 */
+.options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: -1rem;
+}
+
+.autoLoginOption {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.checkbox {
+  width: 1rem;
+  height: 1rem;
+  accent-color: #018941;
+  cursor: pointer;
+}
+
+.checkboxLabel {
+  font-size: 0.875rem;
+  color: #495057;
+  cursor: pointer;
+}
+
+.findAccountLink {
+  background: none;
+  border: none;
+  color: #6c757d;
+  font-size: 0.875rem;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  transition: color 0.2s ease;
+}
+
+.findAccountLink:hover {
+  color: #018941;
+}
+
+/* 로그인 버튼들 */
+.loginButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: var(--login-buttons-margin-top, 3rem);
+
+  padding-bottom: var(--login-buttons-padding-bottom, 0);
+}
+
+.loginButton {
+  width: 100%;
+  padding: 1rem;
+  background: #018941;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: var(--kakao-login-margin-top, -3rem);
+  transform: translateX(var(--login-button-translate-x, 0)) translateY(var(--login-button-translate-y, 0));
+}
+
+.loginButton:hover {
+  background: #016b33;
+}
+
+ .kakaoLoginButton {
+   width: 100%;
+   padding: 1rem;
+   background: #fee500;
+   color: #000000;
+   border: none;
+   border-radius: 0.5rem;
+   font-size: 1rem;
+   font-weight: 600;
+   cursor: pointer;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 0.5rem;
+   transition: background-color 0.2s ease;
+   margin-top: var(--kakao-login-margin-top, 3rem);
+   transform: translateX(var(--kakao-login-translate-x, 0)) translateY(var(--kakao-login-translate-y, 0));
+ }
+
+ .kakaoLoginButton:hover {
+   background: #fdd835;
+ }
+
+ .googleLoginButton {
+   width: 100%;
+   padding: 1rem;
+   background: #ffffff;
+   color: #000000;
+   border: 0.0625rem solid #dee2e6;
+   border-radius: 0.5rem;
+   font-size: 1rem;
+   font-weight: 600;
+   cursor: pointer;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 0.5rem;
+   transition: all 0.2s ease;
+   transform: translateX(var(--google-login-translate-x, 0)) translateY(var(--google-login-translate-y, 0));
+ }
+
+.googleLoginButton:hover {
+  background: #f8f9fa;
+  border-color: #adb5bd;
+}
+
+.socialIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  object-fit: contain;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 25.875rem) {
+  .container {
+    padding: 1.5rem 1rem;
+  }
+  
+  .logoText {
+    font-size: 1.25rem;
+  }
+  
+  .loginButtons {
+    margin-top: 1.5rem;
+  }
+}
