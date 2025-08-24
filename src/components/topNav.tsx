@@ -4,7 +4,7 @@ import styles from './css/topNav.module.css'; // Assuming you have a CSS module 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
-import { publicImageUrl, pageImageUrl } from '@/utils/supabase/client';
+import { pageImageUrl } from '@/utils/supabase/client';
 
 export default function TopNav() {
 
@@ -36,14 +36,8 @@ export default function TopNav() {
   const logoImgUrl = pageImageUrl('eardreamlogo-w.png');
   const mypageLogoImgUrl = pageImageUrl('profile.png');
 
-  const gotoMypage = () => {
-    alert("미구현 페이지 입니다.");
-    // if (isLoggedIn) {
-    //   router.push('/profile');
-    // } else {
-    //   actLogIn();
-    // }
-  }
+  const gotoMypage = () => router.push('/mypage');
+
   return (
     <div className={styles.topNav}>
       <img src={logoImgUrl} style={{ cursor: 'pointer',width:'9rem',height:'3rem' }} alt=""/>

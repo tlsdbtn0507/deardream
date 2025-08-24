@@ -1,0 +1,198 @@
+.container {
+  max-width: 30rem;
+  /* width: 100%; */
+  margin: 0 auto;
+  min-height: 100vh;
+  background: #ffffff;
+  position: relative;
+  overflow-y: scroll;
+  padding-bottom: 6.5rem; /* 바텀네비 높이 고려 */
+  box-shadow: 0 0 1.25rem rgba(0,0,0,0.1);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* 스크롤바 숨김 */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.container::-webkit-scrollbar { display: none; }
+
+/* 상단 프로필 카드 */
+.headerCard {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 1.25rem 1rem 1.25rem;
+  background: #f5fbf7;
+  border-bottom: 0.0625rem solid #e9ecef;
+}
+
+.avatarWrap {
+  width: 20rem;
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  height: 8rem;
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.userBlock {
+  margin-top: 0.25rem;
+  width: 100%;
+}
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #018941;
+}
+.roleTag {
+  background: #e8f5e8;
+  color: #018941;
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.email {
+  color: #018941;
+  font-size: 0.725rem;
+  margin-top: 0.125rem;
+  font-weight: 700;
+}
+
+.photoBtn {
+  margin-top: 0.5rem;
+  background: #018941;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+/* 메뉴 리스트 */
+.menu {
+  background: #fff;
+  margin-top: 0.5rem;
+}
+
+.item {
+  width: 100%;
+  background: #fff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.95rem 1.25rem;
+  border-bottom: 0.0625rem solid #f1f3f4;
+  cursor: pointer;
+}
+
+.item span{
+  font-size: 1rem;
+  font-weight: 600;
+  color: black;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.iconWrap{
+  background-color: #E0FFEB;
+  z-index: 1;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 10rem;
+}
+
+.icon {
+  z-index: 2;
+  width: 1.75rem;
+  height: 1.75rem;
+  object-fit: contain;
+}
+
+.chev {
+  width: 2rem;
+  height: 2rem;
+  opacity: 0.65;
+}
+
+/* 스위치 */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  inset: 0;
+  background: #e5e7eb;
+  border-radius: 9999px;
+  transition: background-color .2s ease;
+}
+.slider::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,.15);
+  transition: transform .2s ease;
+}
+.switch input:checked + .slider {
+  background: #018941;
+}
+.switch input:checked + .slider::before {
+  transform: translateX(20px);
+}
+
+/* 로그아웃 버튼(바텀 네비 위) */
+.logoutWrap {
+  position: sticky;
+  bottom: 1%; /* 바텀네비 바로 위에 붙도록 */
+  padding: 15rem 1.25rem 0 1.25rem;
+  background: #ffffff;
+  z-index: 5;
+}
+
+.logoutBtn {
+  width: 100%;
+  background: #018941;
+  color: #fff;
+  border: none;
+  padding: 0.9rem 1rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+}
+
+.center {
+  padding: 2rem 1.25rem;
+  text-align: center;
+  color: #6b7280;
+}

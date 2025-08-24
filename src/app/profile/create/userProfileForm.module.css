@@ -19,19 +19,52 @@
 .label {
   display: grid;
   gap: 0.4rem;
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: #374151;
 }
 
-.input {
+/* 모든 텍스트형 인풋 공통 (예시) */
+.input,
+.input[type="text"],
+.input[type="tel"],
+.input[type="email"],
+.input[type="date"] {
+  display: block;
   width: 100%;
-  padding: 0.8rem 0.9rem;
-  border: 0.08rem solid #e5e7eb;
-  border-radius: 0.8rem;
+  box-sizing: border-box;
+  height: 48px;               /* 원하는 높이 */
+  padding: 12px 14px;         /* 원하는 패딩 */
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 16px;            /* iOS 확대 방지용 최소 16px 권장 */
+  line-height: 24px;
   background: #fff;
-  outline: none;
-  color: #374151;
 }
+
+/* iOS/WebKit에서 date 입력을 일반 인풋처럼 보이게 */
+.input[type="date"] {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* WebKit은 내부 값 영역을 따로 키워줘야 실제 높이가 맞아요 */
+.input[type="date"]::-webkit-date-and-time-value {
+  min-height: 24px;           /* 텍스트 라인높이와 매칭 */
+  line-height: 24px;
+  padding: 12px 0;            /* 바깥 padding-block과 맞춰주기 */
+}
+
+/* (선택) 달력 아이콘 위치/색 조정 */
+.input[type="date"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: .7;                /* 필요시 색/필터 조정 */
+}
+
+/* 혹시 다른 리셋이 있다면 box-sizing 보장 */
+.input[type="date"] { box-sizing: border-box; }
 
 .input:focus {
   border-color: #018941;

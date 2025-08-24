@@ -10,6 +10,7 @@
   align-items: center;
   justify-content: center;
   height: 3.5rem;
+  /* width: rem; */
   padding: 0 1rem;
   position: relative;
 }
@@ -24,6 +25,7 @@
 
 .backButton {
   left: 0.5rem;
+  width: 2.5rem;
 }
 
 .helpButton {
@@ -36,8 +38,8 @@
 }
 
 .title {
-  font-size: 1.125rem;
-  font-weight: 600;
+  font-size: 1.5rem;
+  font-weight: 800;
   color: #018941;
   margin: 0;
   text-align: center;
