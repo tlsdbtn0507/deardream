@@ -129,7 +129,7 @@ export default function Main() {
                 )}
               </main>
 
-              <BottomNavigation selectedNav="home" onNavChange={() => { }} onHomeClick={() => { }} />
+              <BottomNavigation selectedNav="home" isPostFull={familyPosts.length >= 20} onNavChange={() => { }} onHomeClick={() => { }} />
             </>
           ) : (
             // ✅ 가족 없을 때 보여주는 초대/생성 컴포넌트에 refetch 콜백 전달

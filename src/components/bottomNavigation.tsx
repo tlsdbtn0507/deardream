@@ -11,6 +11,7 @@ interface BottomNavigationProps {
   selectedNav: NavKey;
   onNavChange: (nav: NavKey) => void;
   onHomeClick?: () => void;
+  isPostFull?: boolean;
 }
 
 const NAV_ITEMS: Array<{
@@ -27,6 +28,7 @@ const NAV_ITEMS: Array<{
 export default function BottomNavigation({
   selectedNav,
   onNavChange,
+  isPostFull
 }: BottomNavigationProps) {
   const router = useRouter();
 
@@ -41,9 +43,15 @@ export default function BottomNavigation({
   }, [selectedNav]);
 
   const handleNavClick = (key: NavKey) => {
+    
     onNavChange(key);
-    // if (key === 'home') onHomeClick?.();
     const to = NAV_ITEMS.find((i) => i.key === key)?.href;
+
+    if (isPostFull && to === "/news/write") {
+      alert('소식은 한 달에 20개만 작성할 수 있습니다.');
+      return;
+    }
+    
     if (to) router.push(to);
   };
 

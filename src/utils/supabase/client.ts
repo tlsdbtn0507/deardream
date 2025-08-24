@@ -58,10 +58,12 @@ export const fetchFamilyInfo = async (familyId: string) => {
 };
 
 export const fetchFamilyPosts = async (familyId: string): Promise<PostType[]> => {
+  // created_at이 최신인 순서로 정렬
   const { data, error } = await supabase
     .from("posts_with_author")
     .select("*")
-    .eq("family_id", familyId);
+    .eq("family_id", familyId)
+    .order("created_at", { ascending: false });
 
   if (error) {
     console.error("Error fetching family posts:", error);
@@ -160,6 +162,11 @@ export async function writePost(params: {
   body: string;
   images: string[];
 }) {
+  const familyPosts = await fetchFamilyPosts(params.family_id);
+  
+  if (familyPosts.length >= 20) {
+    return false;
+  }
   const { error } = await supabase
     .from("posts")
     .insert(params);
