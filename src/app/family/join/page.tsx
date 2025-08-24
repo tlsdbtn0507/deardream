@@ -34,7 +34,7 @@ export default function FamilyInvitePage() {
   return (
     <div className={s.page}>
       <div className={s.logoBar}>
-        <img src={logo} alt="디어드림 로고" className={s.logo} />
+        <img src={logo} alt="디어드림 로고" className={s.logo} style={{ cursor: 'pointer', width: '9rem', height: '6rem' }} />
       </div>
       <div className={s.topBar} />
       <div className={s.inner}>
