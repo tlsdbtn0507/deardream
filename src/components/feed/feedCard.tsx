@@ -133,30 +133,42 @@ export default function FeedCard(props: FeedCardProps) {
   };
 
   const finish = (commit: boolean) => {
-    // commit = true면 다음/이전으로 스냅, 아니면 원위치
     if (!gs.current.dir) {
       setT(curRef.current, 0, true);
       setT(ghostRef.current, gs.current.width * 2, true);
       return;
     }
     const w = gs.current.width;
+
     if (commit) {
+      // 1) 스냅 애니메이션: current는 화면 밖, ghost는 화면 중앙
       setT(curRef.current, gs.current.dir === 'next' ? -w : w, true);
       setT(ghostRef.current, 0, true);
-      // 전환이 끝났다고 가정하고 부모 콜백 호출
+
+      // 2) 애니메이션 종료 시점에 콜백 + 배경 '복사'
       setTimeout(() => {
-        gs.current.dir === 'next' ? onNextImage() : onPrevImage();
-        // 다음 프레임에서 위치 리셋 (새 이미지가 current가 됨)
+        // 부모 쪽 인덱스 전환
+        if (gs.current.dir === 'next') onNextImage();
+        else onPrevImage();
+
+        // 🔴 핵심: ghost의 배경을 current로 복사해서 깜빡임 방지
+        const ghostBg = ghostRef.current?.style.backgroundImage || '';
+        if (curRef.current) curRef.current.style.backgroundImage = ghostBg;
+
+        // 3) 다음 프레임에서 위치 초기화(transition 없이)
         requestAnimationFrame(() => {
-          applyBg(); // 새 current 세팅
           setT(curRef.current, 0, false);
-          setT(ghostRef.current, w * 2, false);
+          setT(ghostRef.current, w * 2, false); // 다시 화면 밖 대기
         });
+
+        // 상태 초기화
+        gs.current.dir = null;
       }, 220);
     } else {
-      // 취소: 둘 다 원래대로
+      // 취소: 둘 다 원래 위치로
       setT(curRef.current, 0, true);
       setT(ghostRef.current, gs.current.dir === 'next' ? w : -w, true);
+      gs.current.dir = null;
     }
   };
 
@@ -220,19 +232,25 @@ export default function FeedCard(props: FeedCardProps) {
             <div ref={curRef} className={styles.pane} style={{ backgroundImage: getCurrentBg() }} />
             <div ref={ghostRef} className={styles.pane} />
             {/* 오버레이/카운터 */}
-            <div className={styles.imageOverlay}>
-              <button
-                className={styles.edgePrev}
-                aria-label="이전"
-                onClick={(e) => { e.stopPropagation(); finish(true); onPrevImage(); }}
-              />
-              <div className={styles.imageCounter}>{currentImageIndex}/{totalImages}</div>
-              <button
-                className={styles.edgeNext}
-                aria-label="다음"
-                onClick={(e) => { e.stopPropagation(); finish(true); onNextImage(); }}
-              />
-            </div>
+            <button
+              className={styles.edgePrev}
+              aria-label="이전"
+              onClick={(e) => {
+                e.stopPropagation();
+                gs.current.dir = 'prev';   // 방향 지정
+                finish(true);              // 전환 + 위에서 콜백 호출
+              }}
+            />
+
+            <button
+              className={styles.edgeNext}
+              aria-label="다음"
+              onClick={(e) => {
+                e.stopPropagation();
+                gs.current.dir = 'next';
+                finish(true);
+              }}
+            />
           </div>
         </div>
       </div>
