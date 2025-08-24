@@ -517,4 +517,40 @@
 
 .slider { touch-action: pan-y; will-change: transform; }
 
+/* 사진 뷰포트 */
+.viewport {
+  position: relative;
+  width: 100%;
+  padding-top: 100%;         /* 정사각 비율 유지 (원래 비율에 맞게 바꿔도 됨) */
+  overflow: hidden;
+  border-radius: 1rem;
+  background: #fff;
+  touch-action: pan-y;       /* 세로 스크롤은 유지, 가로는 우리가 처리 */
+  user-select: none;
+}
 
+/* 실제 슬라이드 조각 */
+.pane {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  will-change: transform;
+  transform: translateX(0);
+}
+
+/* 좌우 가장자리 클릭 영역(투명 버튼) */
+.edgePrev,
+.edgeNext {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2rem;              /* 필요하면 0.2rem 등으로 */
+  opacity: 0;               /* 시각적으로 투명, 클릭만 */
+}
+.edgePrev { left: 0; }
+.edgeNext { right: 0; }
+
+/* 카운터는 네가 쓰던 스타일 유지 */
+.imageOverlay { /* 기존과 동일하게 */ }
+.imageCounter  { /* 기존과 동일 */ }

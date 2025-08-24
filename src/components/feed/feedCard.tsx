@@ -1,3 +1,4 @@
+// src/components/feed/feedCard.tsx
 'use client';
 
 import { useRef } from 'react';
@@ -10,11 +11,17 @@ interface FeedCardProps {
   authorName: string;
   authorRole: string;
   authorAvatar: string;
-  currentImageIndex: number;    // 1-base
+  currentImageIndex: number; // 1-based
   totalImages: number;
+
   onNextImage: () => void;
   onPrevImage: () => void;
-  getCurrentImage: () => string; // css background-image 값 (url("...")) 형태
+
+  // 🔸 배경 getter
+  getCurrentBg: () => string;  // url("...")
+  getNextBg: () => string;
+  getPrevBg: () => string;
+
   isAnimating: boolean;
   date?: string;
   commentCount?: number;
@@ -22,64 +29,61 @@ interface FeedCardProps {
   onDelete?: (postId: string) => void;
 }
 
-export default function FeedCard({
-  postId,
-  authorName,
-  authorRole,
-  authorAvatar,
-  currentImageIndex,
-  totalImages,
-  onNextImage,
-  onPrevImage,
-  getCurrentImage,
-  isAnimating,
-  date,
-  commentCount = 0,
-  text,
-  onDelete
-}: FeedCardProps) {
-  const slideEl = useRef<HTMLDivElement>(null);
+export default function FeedCard(props: FeedCardProps) {
+  const {
+    postId, authorName, authorRole, authorAvatar,
+    currentImageIndex, totalImages,
+    onNextImage, onPrevImage,
+    getCurrentBg, getNextBg, getPrevBg,
+    isAnimating, date, text, onDelete
+  } = props;
 
-  // 제스처 상태를 ref로 관리
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const curRef = useRef<HTMLDivElement>(null);
+  const ghostRef = useRef<HTMLDivElement>(null);
+
+  // 제스처 상태
   const gs = useRef({
     dragging: false,
     pointerId: -1 as number,
-    startX: 0,
-    startY: 0,
+    startX: 0, startY: 0,
     lastX: 0,
-    startTime: 0,
     locked: null as null | 'x' | 'y',
+    width: 0,
+    dir: null as null | 'next' | 'prev',
   });
 
-  const SWIPE_DISTANCE = 60;   // px
-  const LOCK_THRESHOLD = 8;    // px
-  const FLICK_SPEED = 0.6;     // px/ms
-  const EDGE_RESIST = 0.35;
-
-  const setTransform = (x: number, instant = false) => {
-    const el = slideEl.current;
+  const LOCK = 8, THRESH = 60, FLICK = 0.6, EDGE = 0.35;
+  const setT = (el: HTMLDivElement | null, x: number, withTransition = false) => {
     if (!el) return;
-    el.style.transition = instant ? 'none' : 'transform 220ms ease';
+    el.style.transition = withTransition ? 'transform 220ms ease' : 'none';
     el.style.transform = `translateX(${x}px)`;
   };
-  const resetTransform = () => setTransform(0, false);
+  const applyBg = () => {
+    if (curRef.current) curRef.current.style.backgroundImage = getCurrentBg();
+    // ghost는 방향에 맞춰 onPointerMove에서 세팅
+  };
 
   const onPointerDown: React.PointerEventHandler<HTMLDivElement> = (e) => {
     if (isAnimating || totalImages === 0) return;
-    // 마우스 보조버튼 무시
     if (e.pointerType === 'mouse' && e.button !== 0) return;
+
+    const rect = viewportRef.current!.getBoundingClientRect();
+    gs.current.width = rect.width;
 
     gs.current.dragging = true;
     gs.current.pointerId = e.pointerId;
     gs.current.startX = e.clientX;
     gs.current.startY = e.clientY;
     gs.current.lastX = e.clientX;
-    gs.current.startTime = performance.now();
     gs.current.locked = null;
+    gs.current.dir = null;
 
-    slideEl.current?.setPointerCapture(e.pointerId);
-    // 드래그 시작: transition 끄기
-    setTransform(0, true);
+    viewportRef.current?.setPointerCapture(e.pointerId);
+    // 현재/유령 준비
+    applyBg();
+    setT(curRef.current, 0, false);
+    setT(ghostRef.current, gs.current.width * 2, false); // 화면 밖
   };
 
   const onPointerMove: React.PointerEventHandler<HTMLDivElement> = (e) => {
@@ -88,110 +92,106 @@ export default function FeedCard({
     const dx = e.clientX - gs.current.startX;
     const dy = e.clientY - gs.current.startY;
 
-    // 아직 방향 잠금 미결정 → 결정
     if (!gs.current.locked) {
-      if (Math.abs(dx) > LOCK_THRESHOLD || Math.abs(dy) > LOCK_THRESHOLD) {
+      if (Math.abs(dx) > LOCK || Math.abs(dy) > LOCK) {
         gs.current.locked = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
-      } else {
-        return;
-      }
+      } else return;
     }
 
-    // 세로 스크롤 우세 → 드래그 취소
     if (gs.current.locked === 'y') {
+      // 세로 스크롤 우세
       gs.current.dragging = false;
-      slideEl.current?.releasePointerCapture(gs.current.pointerId);
-      resetTransform();
+      viewportRef.current?.releasePointerCapture(gs.current.pointerId);
+      setT(curRef.current, 0, true);
       return;
     }
 
-    // 가로 슬라이드 우세 → 세로 스크롤 방지
     e.preventDefault();
 
-    let offset = dx;
-    if (currentImageIndex === 1 && dx > 0) {
-      offset = dx * EDGE_RESIST;
-    } else if (currentImageIndex === totalImages && dx < 0) {
-      offset = dx * EDGE_RESIST;
+    // 방향 결정 + 유령 배경/초기 위치 세팅
+    const dir = dx < 0 ? 'next' : 'prev';
+    if (gs.current.dir !== dir) {
+      gs.current.dir = dir;
+      const ghostBg = dir === 'next' ? getNextBg() : getPrevBg();
+      if (ghostRef.current) ghostRef.current.style.backgroundImage = ghostBg;
+      // 유령을 옆 칸에 놓기
+      const base = dir === 'next' ? gs.current.width : -gs.current.width;
+      setT(ghostRef.current, base, false);
     }
 
-    setTransform(offset, true);
+    let offset = dx;
+    // 가장자리 저항
+    if (currentImageIndex === 1 && dx > 0) offset = dx * EDGE;
+    if (currentImageIndex === totalImages && dx < 0) offset = dx * EDGE;
+
+    // 현재와 유령을 같이 이동
+    setT(curRef.current, offset, false);
+    const base = gs.current.dir === 'next' ? gs.current.width : -gs.current.width;
+    setT(ghostRef.current, base + offset, false);
+
     gs.current.lastX = e.clientX;
   };
 
-  const finishSwipe = (dir: 'next' | 'prev') => {
-    const SNAP = dir === 'next' ? -40 : 40;
-    setTransform(SNAP, false);
-    // 다음 프레임 2번으로 부드럽게 연결
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        dir === 'next' ? onNextImage() : onPrevImage();
-        setTransform(0, true); // 새 이미지로 바뀌면 transform 초기화
-      });
-    });
+  const finish = (commit: boolean) => {
+    // commit = true면 다음/이전으로 스냅, 아니면 원위치
+    if (!gs.current.dir) {
+      setT(curRef.current, 0, true);
+      setT(ghostRef.current, gs.current.width * 2, true);
+      return;
+    }
+    const w = gs.current.width;
+    if (commit) {
+      setT(curRef.current, gs.current.dir === 'next' ? -w : w, true);
+      setT(ghostRef.current, 0, true);
+      // 전환이 끝났다고 가정하고 부모 콜백 호출
+      setTimeout(() => {
+        gs.current.dir === 'next' ? onNextImage() : onPrevImage();
+        // 다음 프레임에서 위치 리셋 (새 이미지가 current가 됨)
+        requestAnimationFrame(() => {
+          applyBg(); // 새 current 세팅
+          setT(curRef.current, 0, false);
+          setT(ghostRef.current, w * 2, false);
+        });
+      }, 220);
+    } else {
+      // 취소: 둘 다 원래대로
+      setT(curRef.current, 0, true);
+      setT(ghostRef.current, gs.current.dir === 'next' ? w : -w, true);
+    }
   };
 
   const onPointerUpOrCancel: React.PointerEventHandler<HTMLDivElement> = (e) => {
     if (!gs.current.dragging) return;
-
     const dx = e.clientX - gs.current.startX;
-    const dt = Math.max(1, performance.now() - gs.current.startTime);
-    const speed = Math.abs(dx) / dt; // px/ms
+    const dt = Math.max(1, Math.abs(e.timeStamp as number)); // 브라우저별 방어
+    const speed = Math.abs(dx) / dt; // 대략 px/ms
 
-    if (gs.current.locked !== 'x') {
-      resetTransform();
-    } else {
+    let commit = false;
+    if (gs.current.locked === 'x') {
       const goNext = dx < 0 && currentImageIndex < totalImages;
       const goPrev = dx > 0 && currentImageIndex > 1;
-      const passDistance = Math.abs(dx) > SWIPE_DISTANCE;
-      const passFlick = speed > FLICK_SPEED;
-
-      if ((passDistance || passFlick) && (goNext || goPrev)) {
-        finishSwipe(goNext ? 'next' : 'prev');
-      } else {
-        resetTransform();
-      }
+      commit = (Math.abs(dx) > THRESH || speed > FLICK) && (goNext || goPrev);
     }
+    finish(commit);
 
     gs.current.dragging = false;
-    slideEl.current?.releasePointerCapture(gs.current.pointerId);
+    viewportRef.current?.releasePointerCapture(gs.current.pointerId);
   };
 
-  // 🔹 엣지 탭존 핸들러 (드래그 시작 방지)
-  const stopPointerPropagation: React.PointerEventHandler<HTMLDivElement> = (e) => {
-    e.stopPropagation();
-  };
-  const onEdgePrevClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
-    e.stopPropagation();
-    if (isAnimating || currentImageIndex <= 1) return;
-    onPrevImage();
-  };
-  const onEdgeNextClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
-    e.stopPropagation();
-    if (isAnimating || currentImageIndex >= totalImages) return;
-    onNextImage();
+  const deleteImg = pageImageUrl('delete.png');
+  const handleDelete: React.MouseEventHandler<HTMLImageElement> = (e) => {
+    e.preventDefault();
+    if (postId && confirm('이 게시물을 삭제하시겠습니까?')) onDelete?.(postId);
   };
 
   if (totalImages === 0) return null;
 
-  const deleteImg = pageImageUrl('delete.png');
-
-  const removePost: React.MouseEventHandler<HTMLImageElement> = async (e) => {
-    e.preventDefault();
-    if (!postId) return;
-    if (confirm('이 게시물을 삭제하시겠습니까?')) {
-      onDelete?.(postId); // 실제 삭제는 상위에서 수행
-    }
-  };
-
   return (
     <div className={styles.feedContainer}>
+      {/* 헤더 */}
       <div className={styles.postHeader}>
         <div className={styles.postAuthor}>
-          <div
-            className={styles.authorAvatar}
-            style={{ backgroundImage: `url(${authorAvatar})` }}
-          />
+          <div className={styles.authorAvatar} style={{ backgroundImage: `url(${authorAvatar})` }} />
           <div className={styles.authorInfo}>
             {date && <div className={styles.postDate}>{date.split('T')[0]}</div>}
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: '0.4rem' }}>
@@ -201,54 +201,37 @@ export default function FeedCard({
           </div>
         </div>
         <div className={styles.postActions}>
-          <img
-            id={postId}
-            src={deleteImg}
-            alt="삭제"
-            className={styles.actionIcon}
-            onClick={removePost}
-            style={{ cursor: 'pointer' }}
-          />
+          <img id={postId} src={deleteImg} alt="삭제" className={styles.actionIcon} onClick={handleDelete} />
         </div>
       </div>
 
+      {/* 이미지 영역 */}
       <div className={styles.postImage}>
         <div className={styles.imagePlaceholder}>
           <div
-            ref={slideEl}
-            className={styles.familyPhoto}
-            style={{
-              backgroundImage: getCurrentImage(),
-              // 세로 스크롤은 허용, 가로 제스처는 코드가 판단
-              touchAction: 'pan-y',
-            }}
-            // 스와이프 제스처
+            ref={viewportRef}
+            className={styles.viewport}                                  // 새 컨테이너
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
             onPointerUp={onPointerUpOrCancel}
             onPointerCancel={onPointerUpOrCancel}
           >
-            {/* 🔹 좌/우 엣지 탭존 */}
-            <div
-              className={`${styles.edgeTapZone} ${styles.edgeLeft}`}
-              role="button"
-              aria-label="이전 이미지"
-              onPointerDown={stopPointerPropagation}
-              onClick={onEdgePrevClick}
-            />
-            <div
-              className={`${styles.edgeTapZone} ${styles.edgeRight}`}
-              role="button"
-              aria-label="다음 이미지"
-              onPointerDown={stopPointerPropagation}
-              onClick={onEdgeNextClick}
-            />
-
+            {/* 현재/유령 두 장을 함께 이동 */}
+            <div ref={curRef} className={styles.pane} style={{ backgroundImage: getCurrentBg() }} />
+            <div ref={ghostRef} className={styles.pane} />
+            {/* 오버레이/카운터 */}
             <div className={styles.imageOverlay}>
-              <div className={styles.imageCounter}>
-                {currentImageIndex}/{totalImages}
-              </div>
-              <div className={styles.imageLogo}>이어드림</div>
+              <button
+                className={styles.edgePrev}
+                aria-label="이전"
+                onClick={(e) => { e.stopPropagation(); finish(true); onPrevImage(); }}
+              />
+              <div className={styles.imageCounter}>{currentImageIndex}/{totalImages}</div>
+              <button
+                className={styles.edgeNext}
+                aria-label="다음"
+                onClick={(e) => { e.stopPropagation(); finish(true); onNextImage(); }}
+              />
             </div>
           </div>
         </div>
