@@ -15,7 +15,6 @@ export default function TopNav() {
   const isUserLoggedIn = async () => {
     
     const { data } = await supabase.auth.getSession();
-    console.log(data);
 
     //로그인 한 값을 전역에 저장
     

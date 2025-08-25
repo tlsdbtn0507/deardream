@@ -49,7 +49,6 @@ export default function ArchivePage() {
       const months = await fetchFamilyMonth(user.id);
       // return monthlyArchives.filter(archive => months.includes(archive.month));
       const monthUrls = await Promise.all(months.map(month => newsImageUrl(month)));
-      console.log(monthUrls);
 
       setMonthlyArchives(months.map((month, idx) => ({
         //yyyymm -> yyyy.mm

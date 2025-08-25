@@ -66,7 +66,6 @@ export default function ProfileSection({
     setIsDragging(false);
   }, []);
 
-  console.log(profiles);
   
 
   return (
