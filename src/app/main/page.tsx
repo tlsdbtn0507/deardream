@@ -5,6 +5,7 @@ import { supabase, fetchUserFamily, fetchFamilyInfo, fetchFamilyPosts } from '@/
 import { useRouter } from 'next/navigation';
 import { PostType, FamilyMember } from '@/utils/types';
 
+import TopNav from '@/components/topNav';
 import ProfileSection from '@/components/profileSection/profileSection';
 import InviteOrCreate from '@/components/family/inviteOrCreate';
 import BottomNavigation from '@/components/bottomNavigation';
@@ -95,6 +96,7 @@ export default function Main() {
 
   return (
     <div className={styles.container}>
+      <TopNav />
       {loading && (
         <div className={styles.center}>
           <Spinner text="불러오는 중..." />

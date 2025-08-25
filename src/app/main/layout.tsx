@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import TopNav from "@/components/topNav";
 
 export const metadata: Metadata = {
   title: "디어드림",
@@ -14,7 +13,7 @@ export default async function RootLayout({
 
   return (
     <main>
-      <TopNav />
+      
       {/* {children={loggedIn}} */}
       {children}
     </main>
