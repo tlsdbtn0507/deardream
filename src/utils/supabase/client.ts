@@ -163,7 +163,7 @@ export async function writePost(params: {
   images: string[];
 }) {
   const familyPosts = await fetchFamilyPosts(params.family_id);
-  
+
   if (familyPosts.length >= 20) {
     return false;
   }
@@ -179,16 +179,16 @@ export async function writePost(params: {
 }
 
 export const fetchFamilyIdwithCode = async (inviteCode: string) => {
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("families")
     .select("id")
     .eq("invite_code", inviteCode)
     .maybeSingle();
 
-  if (error) {
-    console.error("Error fetching family ID with code:", error);
-    return null;
-  }
+if (!data) {
+  // throw new Error("Invite code not found");
+  return false;
+}
   return data?.id;
 };
 

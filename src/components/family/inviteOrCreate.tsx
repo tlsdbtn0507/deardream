@@ -68,13 +68,13 @@ export default function InviteOrCreate({ userId, onJoined }: Props) {
       const familyId = await fetchFamilyIdwithCode(inviteCode.trim());
       const userId = JSON.parse(localStorage.getItem("sb-raksukmfixcxokoqewyn-auth-token") as string).user.id;
       const { profile_image } = JSON.parse(localStorage.getItem("userWritingInfo") as string);
-
-      await participateFamily({ userId, familyId, relation, role: relationToFamilyRole(relation), profileImage: profile_image });
-
+      
       if (!familyId) {
         alert("유효하지 않은 초대코드입니다.");
         return;
       }
+
+      await participateFamily({ userId, familyId, relation, role: relationToFamilyRole(relation), profileImage: profile_image });
       alert("가족 그룹에 성공적으로 참여했습니다.");
       await onJoined?.();
       // router.refresh();
